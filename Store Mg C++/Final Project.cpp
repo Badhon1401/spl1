@@ -246,10 +246,7 @@ int main()
 	{
 	
 	system("cls");
-	/*disp();
-	
-	cout<<"\n\n\n\nEnter the No. of Products that you wish to add: ";
-    cin>>n;*/
+
     system("cls");
     cout<<"\n\n\n\n\n\n\n\t\t\t\t\tEnter the password letter by letter: ";
 	
@@ -265,8 +262,7 @@ int main()
 	}
 	if(strcmp(pass,"dealer")==0)
 	{
-    /*cout<<"\n\n\nCongrats!!Access Granted!!\n\n";
-    getch();*/
+   
     system("cls");
 	dealermenu:
 	system("cls");
