@@ -8,27 +8,26 @@ int i,n;
 ifstream fin;
 ofstream fout;
 fstream fio;
-void disp();
+void display();
 class stock
 {
-	char name[20],pass[10];
-	float pr;
-    int quant;
+	char name[20];
+	float price;
+    int quantity;
 public:
 	void get();
-	void get2();
-	void show();
-    int stchk(char nm[30]);    
-    void withd(int qty);
+	void show();   
+    void withdraw(int qty);
     void refil(int qty);
+	int stock_check(char nm[30]); 
 }st;
-void stock::withd(int qty)
+void stock::withdraw(int qty)
 {
-	if(quant>=qty)
+	if(quantity>=qty)
 	{
-		quant-=qty;
+		quantity-=qty;
 		cout<<"\n\nStock updated.\n";
-		cout<<"\n\nTotal price to be paid:"<<pr*qty;
+		cout<<"\n\nTotal price to be paid:"<<price*qty;
     }
 	else 
 	   cout<<"\n\nInsufficient stock";
@@ -36,11 +35,11 @@ void stock::withd(int qty)
 }
 void stock::refil(int qty)
 {	
-		quant+=qty;
+		quantity+=qty;
 		cout<<"\n\nStock updated.";
 	    getch();
 }
-int stock::stchk(char nm[30])
+int stock::stock_check(char nm[30])
 {
 	if(strcmp(nm,name)==0)
 	 return 0;
@@ -50,44 +49,36 @@ int stock::stchk(char nm[30])
 void stock::get()
 {   
 	cout<<"Enter name of the product followed by price and quantity...\n";
-	cin>>name>>pr>>quant;
+	cin>>name>>price>>quantity;
 }
-void stock::get2()
-{
-	cin>>name>>quant;
-}
-
 void stock::show()
 {
-	
-	cout<<"\n"<<name<<"\t\t\t"<<quant<<"\t\t\t"<<pr;
+	cout<<"\n"<<name<<"\t\t\t"<<quantity<<"\t\t\t"<<price;
+
 }
 void addnew()
 {
     system("cls");
-	disp();
+	display();
 	getch();
 	system("cls");
 	cout<<"\nEnter the No. of Products that you wish to add: ";
     cin>>n;
     if (n!=0)
     {
-	//int j,l,sum=0;
 	fout.open("shop.dat",ios::binary|ios::app);
 	for(i=0;i<n;i++)
-	
 	{
-		cout<<"\n\nInput the name, price and the quantity of item respectively\n\n";
 	    st.get();
 	    fout.write((char*)&st,sizeof(st));
-        cout<<"\n\nitem updated";
+        cout<<"\n\nitem updated\n";
 		cin.get();
- }
-    cout<<"\n\nStock Updated!!";
+    }
+    cout<<"\n\nStock Updated!!!";
     fout.close();
     cin.get();
     system("cls");
-    disp();
+    display();
 }
 
 	else
@@ -106,42 +97,40 @@ void withdraw()
 	char temp[100];int qty;
 	int i=0;
 	long pos=0;
-	disp();
+	display();
 	cout<<"\n\nEnter the product's name \n"<<endl;
 	cin>>temp;
 	cout<<"\n\nEnter quantity: \n"<<endl;
 	cin>>qty;
 	fio.open("shop.dat",ios::binary|ios::out|ios::in);
+
      while(fio)
      {
 	    pos=fio.tellp();
 	    fio.read((char*)&st,sizeof(st));
-	    if(st.stchk(temp)==0)
+	    if(st.stock_check(temp)==0)
 	    {
-		  
-		  st.withd(qty);
+		  st.withdraw(qty);
 		  fio.seekp(pos);
 		  fio.write((char*)&st,sizeof(st));
 		  i++;break;
 	    }
      }
-     
-    
+
      if(i!=1)
        cout<<"\n\n!!Record not found!!";
      fio.close();
     cin.get();
     system("cls");
-	 disp(); 
+	 display(); 
 	getch();
 }
-void disp()
+void display()
 {
-	int i=1;
 	cout<<"\n==================================================================";
-	cout<<"\n\n=================\tTHE STOCK ITEMS ARE\t==================";
+	cout<<"\n\n==============\tBadhon's Store\t==================";
 	cout<<"\n\n==================================================================\n";
-	cout<<"\n\nPARTICULARS\tSTOCK AVAILABLE\t\t\t PRICE";
+	cout<<"\n\nPRODUCTS_NAME\tSTOCK AVAILABLE\t\t\t PRICE";
 	cout<<"\n\n============================================================\n";	
 	 fin.open("shop.dat",ios::binary);
      while(!fin.eof())
@@ -150,16 +139,15 @@ void disp()
 	  if(!fin.eof())
 	  {
 	     if(fin.tellg()<0)
-	     {	i=0; break;}
+	     {	
+		 cout<<"\n\n\t\t\t!!Empty record room!!";
+		 getch();
+	 	 break;
+		}
 	     st.show();
 	  }
      }
-     if(i==0)
-     {	cout<<"\n\n\t\t\t!!Empty record room!!";
-	getch();
-     }
      fin.close();
-    
 }
 void refill()
 {
@@ -167,7 +155,7 @@ void refill()
 	char temp[100];int qty;
 	int i=0;
 	long pos=0;
-	disp();
+	display();
 	cout<<"\n\nEnter the products name \n"<<endl;
 	cin>>temp;
 	cout<<"\n\nEnter quantity: \n"<<endl;
@@ -177,9 +165,8 @@ void refill()
      {
 	    pos=fio.tellp();
 	    fio.read((char*)&st,sizeof(st));
-	    if(st.stchk(temp)==0)
+	    if(st.stock_check(temp)==0)
 	    {
-		  
 		  st.refil(qty);
 		  fio.seekp(pos);
 		  fio.write((char*)&st,sizeof(st));
@@ -191,7 +178,7 @@ void refill()
      fio.close();
     system("cls");
     cin.get();
-	 disp(); cin.get();
+	 display(); cin.get();
     
 	
 }
@@ -209,7 +196,7 @@ void remove()
      {
 	  fin.read((char*)&st,sizeof(st));
 	  if(!fin.eof()){
-	    if(st.stchk(temp)==0)
+	    if(st.stock_check(temp)==0)
 	    {
 		  st.show();
 		  cout<<"\n\n\t\tRecord deleted";
@@ -228,41 +215,15 @@ void remove()
 }
 int main()
 {
-	char pass[10];
-	//pass2[10];
 	int i,j;
-	cout<<"\n\n\n\n\n\n\n\n\n\n\n \t\t\t|============ WELCOME TO BADHON'S STORE ============|\n";
-	/*
-	getch();
-	system("cls");
-	cout<<"\n\t\t   STORE MANAGEMENT SYSTEM\n";	
-	*/
-	cout<<"=============================================================";
-	cout<<"\n\n\t\t   1. Dealer Menu\n\n\t\t   2. Customer Menu\n\n\t\t ";
-	cout<<"\n\n=============================================================\n";
-	cout<<"\n\nEnter Your Choice:";
+	cout<<"\n|============ WELCOME TO BADHON'S STORE ============|\n";
+	cout<<"====================================================";
+	cout<<"\n\t\t   1. Dealer Mode\n\n\t\t   2. Customer Mode";
+	cout<<"\n====================================================";
+	cout<<"\nEnter Your Choice:";
 	cin>>j;
 	if(j==1)
 	{
-	
-	system("cls");
-
-    system("cls");
-    cout<<"\n\n\n\n\n\n\n\t\t\t\t\tEnter the password letter by letter: ";
-	
-	for(int z=0;z<6;z++)
-	{
-		pass[z]=getch();
-		system("cls");
-		cout<<"\n\n\n\n\n\n\n\t\t\t\t\tEnter the password letter by letter: ";
-		for(i=1;i<=(z+1);i++)
-		{
-			cout<<"*";
-		}
-	}
-	if(strcmp(pass,"dealer")==0)
-	{
-   
     system("cls");
 	dealermenu:
 	system("cls");
@@ -273,14 +234,13 @@ int main()
 	cin>>i;
 	if(i==1)
 	{
-		addnew();getch();
+	addnew();getch();
 	goto dealermenu;
 	}
-
 	else if(i==2)
 	{
-		system("cls");
-	disp();getch();goto dealermenu;
+	system("cls");
+	display();getch();goto dealermenu;
 	}
 	else if(i==3)
 	{
@@ -297,47 +257,32 @@ int main()
 	getch();
 	exit(0);
 }
-}
-else
-{
-	cout<<"\n\n\nAuthorised Personnel Only\n\n";
-	getch();
-	exit(0);
-}
-	}
+}	
 	if(j==2)
 	{
-		custmenu:
+	customermenu:
 	system("cls");
 	cout<<"=================================================================";
 	cout<<"\n\n\t\t\t    CUSTOMER MENU\n1. Purchase\n2. Display stock\n3. Exit:";
 	cout<<"\n\n\n==========================END OF MENU=============================";
 	cout<<"\n\n Enter your Choice :\t";
 	cin>>i;
-	
-	
-	
 	if (i==1)
 	{
-	withdraw();getch();goto custmenu;
+	withdraw();getch();goto customermenu;
 	}
 	else if(i==2)
 	{
-		system("cls");
-	disp();getch();goto custmenu;
+	system("cls");
+	display();getch();goto customermenu;
 	}
-	
-	else 
+    else 
 	{
-		system("cls");
+	system("cls");
 	cout<<"\n\n\n\tThanks for visiting my shop";
 	getch();
 	exit(0);
 }
-	
+	}	
+	getch();	
 }
-	
-	getch();
-	
-}
-
