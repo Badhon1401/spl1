@@ -14,18 +14,22 @@ class stock
 	char name[20];
 	float price;
     int quantity;
+	int sold;
 public:
 	void get();
 	void show();   
     void withdraw(int qty);
     void refil(int qty);
 	int stock_check(char nm[30]); 
+	void sales_show(); 
 }st;
+//int stock::sold=0;
 void stock::withdraw(int qty)
 {
 	if(quantity>=qty)
 	{
 		quantity-=qty;
+		sold+=qty;
 		cout<<"\n\nStock updated.\n";
 		cout<<"\n\nTotal price to be paid:"<<price*qty;
     }
@@ -50,11 +54,17 @@ void stock::get()
 {   
 	cout<<"Enter name of the product followed by price and quantity...\n";
 	cin>>name>>price>>quantity;
+	sold=0;
 }
 void stock::show()
 {
 	cout<<"\n"<<name<<"\t\t\t"<<quantity<<"\t\t\t"<<price;
 
+}
+void stock::sales_show(){
+	
+	cout<<"\n"<<name<<"\t\t\t"<<sold;
+	
 }
 void addnew()
 {
@@ -144,7 +154,27 @@ void display()
 		 getch();
 	 	 break;
 		}
-	     st.show();
+	    st.show();
+	  }
+     }
+     fin.close();
+}
+void sales(){
+	cout<<"Name\t\t\t"<<"Item sold\n";
+	cout<<"======\t\t\t"<<"=========\n";
+	 fin.open("shop.dat",ios::binary);
+     while(!fin.eof())
+     {
+	  fin.read((char*)&st,sizeof(st));
+	  if(!fin.eof())
+	  {  
+		 if(fin.tellg()<0)
+	     {	
+		 cout<<"\n\n\t\t\t!!Empty record room!!";
+		 getch();
+	 	 break;
+		}
+	     st.sales_show();
 	  }
      }
      fin.close();
@@ -228,7 +258,7 @@ int main()
 	dealermenu:
 	system("cls");
 	cout<<"=================================================================";
-	cout<<"\n\n\t\t\t    DEALER MENU\n1. Add new product\n2. Display stock\n3. Refill\n4. Remove an item\n5. Exit:";
+	cout<<"\n\n\t\t\t    DEALER MENU\n1. Add new product\n2. Display stock\n3. Refill\n4. Remove an item\n5. Sales Report\n6. Exit:";
 	cout<<"\n\n\n==========================END OF MENU=============================";
 	cout<<"\n\n Enter your Choice :\t";
 	cin>>i;
@@ -249,6 +279,10 @@ int main()
 	else if(i==4)
 	{
 		remove();getch();goto dealermenu;
+	}
+	else if(i==5)
+	{
+		sales();getch();goto dealermenu;
 	}
 	else 
 	{
