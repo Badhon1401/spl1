@@ -1,21 +1,26 @@
+#include<bits/stdc++.h>
 #include<iostream>
 #include<string.h>
 #include<conio.h>
 #include<math.h>
 #include<fstream>
+#include "trie.cpp"
 using namespace std;
 int i,n;
 ifstream fin;
 ofstream fout;
 fstream fio;
 void display();
+static Trie trie;
 class stock
 {
 	char name[20];
 	float price;
     int quantity;
 	int sold;
+	//Trie trie;
 public:
+   // char name[20];
 	void get();
 	void show();   
     void withdraw(int qty);
@@ -55,6 +60,7 @@ void stock::get()
 	cout<<"Enter name of the product followed by price and quantity...\n";
 	cin>>name>>price>>quantity;
 	sold=0;
+    trieUpdate(name);
 }
 void stock::show()
 {
@@ -81,6 +87,7 @@ void addnew()
 	for(i=0;i<n;i++)
 	{
 	    st.get();
+		//trieUpdate(st.name);
 	    fout.write((char*)&st,sizeof(st));
         cout<<"\n\nitem updated\n";
 		cin.get();
@@ -113,8 +120,9 @@ void withdraw()
 	cin>>temp;
 	cout<<"\n\nEnter quantity: \n"<<endl;
 	cin>>qty;
-	fio.open("shop.dat",ios::binary|ios::out|ios::in);
+	if(trieSearch(temp)){
 
+	fio.open("shop.dat",ios::binary|ios::out|ios::in);
      while(fio)
      {
 	    pos=fio.tellp();
@@ -127,10 +135,12 @@ void withdraw()
 		  i++;break;
 	    }
      }
-
-     if(i!=1)
-       cout<<"\n\n!!Record not found!!";
      fio.close();
+    }
+    else{
+       cout<<"\n\n!!Record not found!!";
+       getch();
+    }
     cin.get();
     system("cls");
 	 display(); 
