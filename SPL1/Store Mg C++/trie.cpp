@@ -32,11 +32,6 @@ public:
     Trie() {
         root = new Node();
     }
-
-    ~Trie() {
-        // Implement destructor logic if needed
-    }
-
     void insert(string word) {
         Node* node = root;
         for (int i = 0; i < static_cast<int>(word.size()); i++) {

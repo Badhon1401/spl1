@@ -390,22 +390,22 @@ fn.close();
 }
 int main()
 {	
-	vector<stock> products;
-	ifstream fn("shop.dat", ios::binary);
-    if (!fn.is_open()) {
-        cout << "Error: Unable to open the file." << endl;
-        return 0;
-    }
+	// vector<stock> products;
+	// ifstream fn("shop.dat", ios::binary);
+    // if (!fn.is_open()) {
+    //     cout << "Error: Unable to open the file." << endl;
+    //     return 0;
+    // }
 
-    // Read data from the file into the products vector
-    while (fn.read((char*)&st, sizeof(st))) {
-        products.push_back(st);
-    }
+    // // Read data from the file into the products vector
+    // while (fn.read((char*)&st, sizeof(st))) {
+    //     products.push_back(st);
+    // }
 
-    fn.close();
-	 for (size_t i = 0; i < products.size(); ++i) {
-		tr.insert(products[i].getName());
-	 }
+    // fn.close();
+	//  for (size_t i = 0; i < products.size(); ++i) {
+	// 	tr.insert(products[i].getName());
+	//  }
 
 	int i,j;
 	cout<<"\n|============ WELCOME TO BADHON'S STORE ============|\n";
