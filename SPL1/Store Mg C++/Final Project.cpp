@@ -41,18 +41,10 @@ public:
 //int stock::sold=0;
 void stock::withdraw(int qty)
 {
-	if(quantity>=qty)
-	{
 		quantity-=qty;
 		sold+=qty;
 		cout<<"\n\nStock updated.\n";
-		cout<<"\n\nTotal price :"<<price*qty;
-    }
-	else {
-	   cout<<"\n\nInsufficient stock";
-	  	
-	}
-	 cin.get(c);
+	 cin.get();
 }
 void stock::refil(int qty)
 {	
@@ -70,10 +62,9 @@ int stock::stock_check(string nm)
 
 void stock::get()
 {   
-	cout<<"Enter name of the product followed by price and quantity...\n";
-	cin>>name>>price>>quantity;
+	cout<<"Enter name -> price -> quantity -> discount...\n";
+	cin>>name>>price>>quantity>>discount;
 	sold=0;
-	discount=0;
 }
 void stock::show()
 {
@@ -90,11 +81,11 @@ void addnew()
 {
     system("cls");
 	display();
-	cin.get(c);
+	cin.get();
 	system("cls");
 	cout<<"\nEnter the No. of Products that you wish to add: ";
     cin>>n;
-    if (n!=0)
+    if (n>0)
     {
 	fout.open("shop.dat",ios::binary|ios::app);
 	for(i=0;i<n;i++)
@@ -112,13 +103,9 @@ void addnew()
 }
 
 	else
-{
-
-	fout.close();
-	cin.get();
-	system("cls");
+{	
 	cout<<"\n\nNo items to be added";
-
+	cin.get();
 }
 }
 void withdraw()
@@ -160,6 +147,7 @@ void withdraw()
 	cin.get(c);
 }
 void applyDiscount() {
+	cin.get();
     system("cls");
     ifstream fin("shop.dat", ios::binary);
     ofstream fout("temp.dat", ios::binary); // Temporary file to store modified records
@@ -169,7 +157,7 @@ void applyDiscount() {
         return;
     }
 
-    char productName[30];
+    string productName;
     float discountPercentage;
     cout << "Enter product name: ";
     cin >> productName;
@@ -182,6 +170,8 @@ void applyDiscount() {
         if (st.stock_check(productName) == 0) {
             st.setDiscount(discountPercentage);
             cout << "\nDiscount of " << discountPercentage << "% applied to " << productName << endl;
+			cin.get();
+			cin.get();
             productFound = true;
         }
         fout.write((char*)&st, sizeof(st)); // Write records to the temporary file
@@ -196,12 +186,14 @@ void applyDiscount() {
 
     if (!productFound) {
         cout << "\nProduct not found!" << endl;
+		cin.get();
+		cin.get();
     }
-	cin.get();
     system("cls");
     display();
 }
 void sales(){
+	cout<<"So here is the sales report:\n";
 	cout<<"Name\t\t\t"<<"Item sold\n";
 	cout<<"======\t\t\t"<<"=========\n";
 	 fin.open("shop.dat",ios::binary);
@@ -213,8 +205,9 @@ void sales(){
 		 if(fin.tellg()<0)
 	     {	
 		 cout<<"\n\n\t\t\t!!Empty record room!!";
-		 cin.get(c);
-	 	 break;
+		 cin.get();
+		  fin.close();
+	 	 return;
 		}
 	     st.sales_show();
 	  }
@@ -225,7 +218,7 @@ void sales(){
 void refill()
 {
 	system("cls");
-	char temp[100];int qty;
+	string temp;int qty;
 	int i=0;
 	long pos=0;
 	display();
@@ -246,9 +239,11 @@ void refill()
 		  i++;break;
 	    }
      }
-     if(i!=1)
+     if(i!=1){
        cout<<"\n\n!!Record not found!!";
-     fio.close();
+	   cin.get();
+	 }
+	fio.close();     
 	 cin.get();
     system("cls");
 	 display(); 
@@ -269,8 +264,9 @@ void display()
 	     if(fin.tellg()<0)
 	     {	
 		 cout<<"\n\n\t\t\t!!Empty record room!!";
-		cin.get();
-	 	 break;
+		fin.close();
+	 	cin.get();
+	 	 return;
 		}
 	    st.show();
 	  }
@@ -282,7 +278,7 @@ void remove()
 {
 	system("cls");	
 	 int i=0;
-     char temp[30];
+     string temp;
      cout<<"\n\t\t\t\tDelete Record";
      cout<<"\n\nEnter the name of the product:";
      cin>>temp;
@@ -308,21 +304,36 @@ void remove()
      fout.close();
      remove("shop.dat");
      rename("temp.dat","shop.dat");
-	 cin.get(c);
+	 cin.get();
 }
 void customerShopping() {
     vector<pair<string, int>> purchases;
     vector<stock> products;
-
+    int k=1;
+	string productName;
+	int quantity;
+	int l=0;
+    while(k==1){
+		int m=0;
+    	system("cls");
+        cout << "\nAvailable Products:" << endl;
+        display();
+		cin.get();
+        system("cls");
+        cout << "Enter product name: ";
+        cin >> productName;
+     cout << "Enter quantity: ";
+        cin >> quantity;
     ifstream fin("shop.dat", ios::binary);
 
     if (!fin.is_open()) {
         cout << "Error: Unable to open the file." << endl;
         return;
     }
-
+	int j=0;
     // Read data from the file into the products vector
     while (fin.read((char*)&st, sizeof(st))) {
+		j++;
         products.push_back(st);
     }
 
@@ -333,50 +344,39 @@ void customerShopping() {
         cin.get();
         return;
     }
-
-    char productName[30];
-    int quantity;
-
-        system("cls");
-        cout << "\nAvailable Products:" << endl;
-        display();
-        cin.get(c);
-        system("cls");
-
-        cout << "Enter product name: ";
-        cin >> productName;
-
-        cout << "Enter quantity: ";
-        cin >> quantity;
-
-        bool productFound = false;
-
         // Find the product in the inventory
         for (size_t i = 0; i < products.size(); ++i) {
             if (products[i].stock_check(productName) == 0) {
+				m=1;
                 if (products[i].getQuantity() >= quantity) {
                         products[i].withdraw(quantity);
                         purchases.push_back(make_pair(productName, quantity));
-                        productFound = true;
+						l=1;
                     } 
                 else {
                     cout << "Insufficient stock for this quantity." << endl;
+					 cin.get();
                 }
                 break;
             }
         }
 
-        if (!productFound) {
-            cout << "Product not found or insufficient stock." << endl;
-		}
-
-    // Write the updated product data back to the file
-    ofstream fout("shop.dat", ios::binary);
-    for (const auto& product : products) {
-        fout.write((char*)&product, sizeof(product));
-    }
-    fout.close();
-
+     fout.open("temp.dat",ios::binary);
+     for(int i=0;i<j;i++){
+		st=products[i];
+		fout.write((char*)&st,sizeof(st));
+	 }
+     fout.close();
+     remove("shop.dat");
+     rename("temp.dat","shop.dat");
+	if(m==0){
+            cout<<"The product is not available...\n";
+			 cin.get();
+	}
+        cout<<"If you want to continue shoping enter 1 otherwise 0\n";
+        cin>>k;
+	}
+	if(l==1){
     // Print the receipt
     cout << "\n\n=============================\n";
     cout << "       Payment Receipt\n";
@@ -389,29 +389,15 @@ void customerShopping() {
         totalAmount += products[0].getPrice() * purchase.second;
     }
     cout << "---------------------------------\n";
-    cout << "Total Amount with discount:\t\t\t" << fixed << setprecision(2) << totalAmount << endl;
+    cout << "Total Amount with discount:\t" << fixed << setprecision(2) << totalAmount << endl;
     cout << "=============================\n";
     cout << "Thank you for shopping with us!\n";
     cin.get();
+	}
+	cin.get();
 }
 int main()
-{	
-	fin.open("shop.dat",ios::binary);
-     while(!fin.eof())
-     {
-	  fin.read((char*)&st,sizeof(st));
-	  if(!fin.eof())
-	  {
-	     if(fin.tellg()<0)
-	     {	
-		 cout<<"\n\n\t\t\t!!Empty record room!!";
-		cin.get();
-	 	 break;
-		}
-	    tr.insert(st.getName());
-	  }
-     }
-     fin.close();
+{
 	int i,j;
 	cout<<"\n|============ WELCOME TO BADHON'S STORE ============|\n";
 	cout<<"====================================================";
@@ -432,36 +418,35 @@ int main()
 	if(i==1)
 	{
 	addnew();
-	cin.get(c);
 	goto dealermenu;
 	}
 	else if(i==2)
 	{
 	system("cls");
-	display();cin.get(c);goto dealermenu;
+	display();cin.get();goto dealermenu;
 	}
 	else if(i==3)
 	{   system("cls");
-		sales();
-		refill();goto dealermenu;
+		sales();cin.get();
+		refill();cin.get();goto dealermenu;
 	}
 	else if(i==4)
 	{
-		remove();cin.get(c);goto dealermenu;
+		remove();cin.get();goto dealermenu;
 	}
 	else if(i==5)
 	{
-		sales();cin.get(c);goto dealermenu;
+		sales();cin.get();goto dealermenu;
 	}
 	else if(i==6)
 	{
-		applyDiscount();cin.get(c);goto dealermenu;
+		applyDiscount();goto dealermenu;
 	}
 	else 
 	{
 		system("cls");
 	cout<<"\n\n\n\tThanks for visiting my shop...";
-	cin.get(c);
+	cin.get();
 	exit(0);
 }
 }	
@@ -476,20 +461,21 @@ int main()
 	cin>>i;
 	if (i==1)
 	{
-	customerShopping();cin.get(c);goto customermenu;
+	system("cls");
+	customerShopping();goto customermenu;
 	}
 	else if(i==2)
 	{
 	system("cls");
-	display();cin.get(c);goto customermenu;
+	display();cin.get();goto customermenu;
 	}
     else 
 	{
 	system("cls");
 	cout<<"\n\n\n\tThanks for visiting my shop";
-	cin.get(c);
+	cin.get();
 	exit(0);
 }
 	}	
-	cin.get(c);
+	cin.get();
 }
