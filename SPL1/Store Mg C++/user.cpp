@@ -9,14 +9,14 @@ public:
         name=n;
         balance=b;
     }
-    User(){
-        name="";
-        balance=0.0;
-    }    
+
     string getName() const {
         return name;
     }
     double getBalance() const {
         return balance;
     }
-}us;
+    void deposit(double amount){
+        balance+=amount;
+    }
+};

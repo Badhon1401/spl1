@@ -1,5 +1,6 @@
 #include<bits/stdc++.h>
 #include "dealerFeatures.cpp"
+#include "userFeatures.cpp"
 using namespace std;
 int main()
 {
@@ -60,16 +61,20 @@ int main()
 	customermenu:
 	system("cls");
 	cout<<"=================================================================";
-	cout<<"\n\n\t\t\t    CUSTOMER MENU\n1. Purchase\n2. Display stock\n3. Exit:";
+	cout<<"\n\n\t\t\t    CUSTOMER MENU\n1. Sign in\n2. Sign up\n3. Purchase\n4. Display stock\n5. Exit:";
 	cout<<"\n\n\n==========================END OF MENU=============================";
 	cout<<"\n\n Enter your Choice :\t";
 	cin>>i;
-	if (i==1)
+	if(i==2){
+	system("cls");
+	signUp();cin.get();goto customermenu;	
+	}
+	if (i==3)
 	{
 	system("cls");
 	customerShopping();goto customermenu;
 	}
-	else if(i==2)
+	else if(i==4)
 	{
 	system("cls");
 	display();cin.get();goto customermenu;
