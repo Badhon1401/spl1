@@ -17,7 +17,7 @@ int main()
 	dealermenu:
 	system("cls");
 	cout<<"=================================================================";
-	cout<<"\n\n\t\t\t    DEALER MENU\n1. Add new product\n2. Display stock\n3. Refill\n4. Remove an item\n5. Sales Report\n6. Apply discount\n7. Exit:";
+	cout<<"\n\n\t\t\t    DEALER MENU\n1. Add new product\n2. Display stock\n3. Refill\n4. Remove an item\n5. Sales Report\n6. Apply discount\n7. Remove User\n8. List of Users\n9. Exit:";
 	cout<<"\n\n\n==========================END OF MENU=============================";
 	cout<<"\n\n Enter your Choice :\t";
 	cin>>i;
@@ -48,6 +48,14 @@ int main()
 	{
 		applyDiscount();goto dealermenu;
 	}
+	else if(i==7)
+	{
+		removeUser();goto dealermenu;
+	}
+	else if(i==8)
+	{
+	listOfUsers();goto dealermenu;
+	}
 	else 
 	{
 		system("cls");
@@ -61,31 +69,56 @@ int main()
 	customermenu:
 	system("cls");
 	cout<<"=================================================================";
-	cout<<"\n\n\t\t\t    CUSTOMER MENU\n1. Sign in\n2. Sign up\n3. Purchase\n4. Display stock\n5. Exit:";
-	cout<<"\n\n\n==========================END OF MENU=============================";
+	cout<<"\n\n\t\t\t    CUSTOMER MENU\n1. Sign in\n2. Sign up\n3. Exit\n";
+	cout<<"\n==========================END OF MENU=============================";
 	cout<<"\n\n Enter your Choice :\t";
 	cin>>i;
-	if(i==2){
+	if(i==1){
 	system("cls");
-	signUp();cin.get();goto customermenu;	
-	}
-	if (i==3)
+	bool b;
+	b=signIn();cin.get();
+	if(b==false){goto customermenu;	}
+	else{
+		int h;
+		system("cls");
+		custmenu:
+	system("cls");
+	cout<<"=================================================================";
+	cout<<"\n\n1. Purchase\n2. Display stock\n3. Exit:";
+	cout<<"\n\n\n==========================END OF MENU=============================";
+		cout<<"\n\n Enter your Choice :\t";
+		cin>>h;
+		if (h==1)
 	{
 	system("cls");
-	customerShopping();goto customermenu;
+	customerShopping();goto custmenu;
 	}
-	else if(i==4)
+	else if(h==2)
 	{
 	system("cls");
-	display();cin.get();goto customermenu;
+	display();cin.get();goto custmenu;
 	}
     else 
 	{
 	system("cls");
-	cout<<"\n\n\n\tThanks for visiting my shop";
+	cout<<"\n\n\n\tThanks for visiting the shop";
 	cin.get();
 	exit(0);
-}
+	}
+
+	}
+	}
+	if(i==2){
+	system("cls");
+	signUp();cin.get();goto customermenu;	
+	}
+	 else 
+	{
+	system("cls");
+	cout<<"\n\n\n\tThanks for visiting the shop";
+	cin.get();
+	exit(0);
+	}
 	}	
 	cin.get();
 }
