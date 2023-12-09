@@ -59,6 +59,7 @@ void applyDiscount() {
             st.setDiscount(discountPercentage);
             cout << "\nDiscount of " << discountPercentage << "% applied to " << productName << endl;
 			cin.get();
+			cin.get();
             productFound = true;
         }
         fout.write((char*)&st, sizeof(st)); 

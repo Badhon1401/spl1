@@ -5,14 +5,21 @@ using namespace std;
 int main()
 {
 	int i,j;
+	string password="dealer";
+	shop:
 	cout<<"\n|============ WELCOME TO BADHON'S STORE ============|\n";
 	cout<<"====================================================";
-	cout<<"\n\t\t   1. Dealer Mode\n\n\t\t   2. Customer Mode";
+	cout<<"\n\t\t   1. Dealer Mode\n\n\t\t   2. Customer Mode\n\n\t\t   3.Exit";
 	cout<<"\n====================================================";
 	cout<<"\nEnter Your Choice:";
 	cin>>j;
 	if(j==1)
 	{
+	system("cls");
+	string pass;
+	cout<<"Enter Dealer Password...\n";
+	cin>>pass;
+	if(pass==password){
     system("cls");
 	dealermenu:
 	system("cls");
@@ -63,6 +70,14 @@ int main()
 	cin.get();
 	exit(0);
 }
+	}
+	else{
+		system("cls");
+		cout<<"Wrong password!!! Access denied to the system...\n";
+		cin.get();
+		cin.get();
+		goto shop;
+	}
 }	
 	if(j==2)
 	{
@@ -84,7 +99,7 @@ int main()
 		custmenu:
 	system("cls");
 	cout<<"=================================================================";
-	cout<<"\n\n1. Purchase\n2. Display stock\n3. Exit:";
+	cout<<"\n\n1. Purchase\n2. Display stock\n3. Delete Account\n4. Exit:";
 	cout<<"\n\n\n==========================END OF MENU=============================";
 		cout<<"\n\n Enter your Choice :\t";
 		cin>>h;
@@ -97,6 +112,11 @@ int main()
 	{
 	system("cls");
 	display();cin.get();goto custmenu;
+	}
+	else if(h==3)
+	{
+	system("cls");
+	deleteAccount();cin.get();goto custmenu;
 	}
     else 
 	{
@@ -115,10 +135,16 @@ int main()
 	 else 
 	{
 	system("cls");
-	cout<<"\n\n\n\tThanks for visiting the shop";
+	cout<<"\n\t\t\tThanks for visiting the shop\n\n";
 	cin.get();
 	exit(0);
 	}
 	}	
+	if(j==3){
+		system("cls");
+		cout<<"\n\t\t\tThanks for visiting the site\n\n";
+		cin.get();
+		exit(0);
+	}
 	cin.get();
 }

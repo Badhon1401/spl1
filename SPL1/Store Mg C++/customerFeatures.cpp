@@ -92,3 +92,8 @@ void customerShopping() {
 	cin.get();
 }
 
+void performTransaction(){
+
+
+    
+}

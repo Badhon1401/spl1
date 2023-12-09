@@ -15,7 +15,7 @@ void writeUserToFile(const User& user) {
     }
     outFile.close();
 }
-void writeAllUserToFile(const User& user) {
+void writeAllUsersToFile(const User& user) {
     ofstream outFile("user.dat", ios::app);
     if (outFile.is_open()) {
         outFile << user.name << " " << user.id << endl;
@@ -75,7 +75,7 @@ bool signIn() {
         }
     }
 
-    cout << "User not found. Please sign up." << endl;
+    cout << "Account not found. Please sign up." << endl;
     cin.get();
     return false;
 }
@@ -104,17 +104,17 @@ void removeUser(){
      string id;
      vector<User> users= readUsersFromFile();
      vector<User> us;
-     cout<<"\n\t\t\t\tDelete User Record";
-     cout<<"\n\nEnter the name of the user:";
+     cout<<"\n\t\t\tDelete User Record";
+     cout<<"\n\nEnter the name of the user: ";
      cin>>temp;
-     cout<<"\nEnter the ID of the user:";
+     cout<<"\nEnter the ID of the user: ";
      cin>>id;
      ifstream fin("user.dat",ios::binary);
      for (const auto& user : users) {
         if (user.getName() == temp && user.getID()==id) {
             i++;
-		  cout<<"\n\t\tUsers Record deleted\n";
-          cout<<"User name: "<<user.getName()<<" User ID: "<<user.getID();
+		  cout<<"\n\t\tUser Record deleted\n";
+          cout<<"User name: "<<user.getName()<<"\nUser ID: "<<user.getID();
           cin.get();
 	    }
 	    else{
@@ -128,7 +128,7 @@ void removeUser(){
         cin.get();
     }
      for (const auto& user : us) {
-        writeAllUserToFile(user);
+        writeAllUsersToFile(user);
      }
 	 cin.get();
 }
@@ -142,4 +142,38 @@ void listOfUsers(){
         }
     cin.get();
     cin.get();
+}
+void deleteAccount(){
+   system("cls");	
+    int i=0;
+     string temp;
+     string id;
+     vector<User> users= readUsersFromFile();
+     vector<User> us;
+     cout<<"\n\t\t\tDelete Account";
+     cout<<"\n\nEnter your name: ";
+     cin>>temp;
+     cout<<"\nEnter your ID: ";
+     cin>>id;
+     ifstream fin("user.dat",ios::binary);
+     for (const auto& user : users) {
+        if (user.getName() == temp && user.getID()==id) {
+            i++;
+		  cout<<"\n\t\tAccount deleted\n";
+          cout<<"Account name: "<<user.getName()<<"\nAccount ID: "<<user.getID();
+          cin.get();
+	    }
+	    else{
+          us.push_back(user);
+        }
+    }
+    fin.close();
+    remove("user.dat");
+    if(i==0){
+        cout<<"Account not found...\n";
+    }
+     for (const auto& user : us) {
+        writeAllUsersToFile(user);
+     }
+	 cin.get();
 }
