@@ -1,12 +1,13 @@
 #include<bits/stdc++.h>
-#include "generalFeatures.cpp"
+#include "userFeatures.cpp"
 using namespace std;
 
 void writeNewProductToFile(const Product& product,string file_name) {
+     string code=getGenre(file_name);
     ofstream outFile(file_name, ios::app);
 
     if (outFile.is_open()) {
-        outFile << product.getName() << " " << product.getID() << " "
+        outFile << product.getID() << " " <<product.getName()<< " "
                 << product.getPrice() << " " << product.getQuantity() << " "
                 << product.getNoOfBuyers() << " " << product.getDiscount() << " "
                 << product.getRating() << " " << product.getNoOfBuyers() << " "
@@ -14,7 +15,7 @@ void writeNewProductToFile(const Product& product,string file_name) {
 
         outFile.close();
         cout << "Product data written to file successfully." << endl;
-        product_Trie.insert(product.getName()+product.getID());
+        product_Trie.insert(code+product.getID());
         cin.get();
         cin.get();
     } else {
@@ -24,11 +25,11 @@ void writeNewProductToFile(const Product& product,string file_name) {
 }
 
 void writeAllProductsToFile(const vector<Product>& products, const string& file_name) {
-    ofstream outFile(file_name, ios::app);
+    ofstream outFile(file_name);
 
     if (outFile.is_open()) {
         for (const Product& product : products) {
-            outFile << product.getName() << " " << product.getID() << " "
+            outFile << product.getID()<< " " << product.getName() << " "
                     << product.getPrice() << " " << product.getQuantity() << " "
                     << product.getNoOfSells() << " " << product.getDiscount() << " "
                     << product.getRating() << " " << product.getNoOfBuyers() << " "
@@ -48,8 +49,8 @@ vector<Product> readProductsFromFile(string file_name) {
     vector<Product> products;
     ifstream inFile(file_name);
     if (inFile.is_open()) {
-    string name;
     string id;
+    string name;
     float price;
     int quantity;
      int sold;
@@ -59,8 +60,8 @@ vector<Product> readProductsFromFile(string file_name) {
     int totalNoOfRaters;
     double totalRatingPoints;
 
-        while (inFile >> name >> id >> price >> quantity >> sold >> discount >> rating >> noOfBuyers >> totalNoOfRaters >> totalRatingPoints) {
-            Product product(name,id,price,quantity,sold,discount,rating,noOfBuyers,totalNoOfRaters,totalRatingPoints);
+        while (inFile >> id >> name >> price >> quantity >> sold >> discount >> rating >> noOfBuyers >> totalNoOfRaters >> totalRatingPoints) {
+            Product product(id,name,price,quantity,sold,discount,rating,noOfBuyers,totalNoOfRaters,totalRatingPoints);
             products.push_back(product);
         }
         inFile.close();
@@ -68,15 +69,28 @@ vector<Product> readProductsFromFile(string file_name) {
     return products;
 }
 
-void displayProducts(){
-    string file_name=getFileName();
-     vector<Product> products= readProductsFromFile(file_name);
-     cout<<"So here is the list of all  product...\n";
-     int i=1;
-       for (const auto& product : products) {
-        cout<<i<<". Name: "<<product.getName()<<" , ID: "<<product.getID()<<" , Price: "<<product.getPrice()<<" , Quantity: "<<product.getQuantity()<<"\n";
+void displayProducts() {
+    string file_name = getFileName();
+    vector<Product> products = readProductsFromFile(file_name);
+
+    if (products.empty()) {
+        cout << "The inventory is empty.\n";
+        cin.get();
+        return;
+    }
+
+    cout << "====================================================================\n";
+    cout << setw(4) << "Serial No" << setw(15) << "ID" << setw(10) << "Name" << setw(15) << "Price" << setw(15) << "Quantity" << "\n";
+    cout << "====================================================================\n";
+
+    int i = 1;
+    for (const auto& product : products) {
+        cout << setw(4) << i << setw(15) << product.getID() << setw(10) << product.getName()
+             << setw(15) << fixed << setprecision(2) << product.getPrice() << setw(15) << product.getQuantity() << "\n";
         i++;
-        }
+    }
+
+   cout << "====================================================================\n";
     cin.get();
 }
 
@@ -86,7 +100,7 @@ void detailsOfAllProducts(){
      cout<<"So here is the full details of all  product...\n";
      int i=1;
        for (const auto& product : products) {
-        cout<<i<<". Name: "<<product.getName()<<" , ID: "<<product.getID()<<" , Price: "<<product.getPrice()<<" , Quantity: "<<product.getQuantity()<<" , Sold: "<<product.getNoOfSells()<<" , Discount: "<<product.getDiscount()<<" , Rating: "<<product.getRating()<<" , Toatal Buyers: "<<product.getNoOfBuyers()<<" , Toatl Raters: "<<product.getNoOfRaters()<<" , Total Rating Points: "<<product.getTotalRatingPoints()<<endl;
+        cout<<i<<". ID: "<<product.getID()<<" , Name: "<<product.getName()<<" , Price: "<<product.getPrice()<<" , Quantity: "<<product.getQuantity()<<" , Sold: "<<product.getNoOfSells()<<" , Discount: "<<product.getDiscount()<<" , Rating: "<<product.getRating()<<" , Toatal Buyers: "<<product.getNoOfBuyers()<<" , Toatl Raters: "<<product.getNoOfRaters()<<" , Total Rating Points: "<<product.getTotalRatingPoints()<<endl;
        i++;
        }
     cin.get();
@@ -94,40 +108,57 @@ void detailsOfAllProducts(){
 }
 
 void salesReport() {
-    string file_name=getFileName();
+    string file_name = getFileName();
     system("cls");
     vector<Product> products = readProductsFromFile(file_name);
 
     cout << "Sales Report:\n";
-    int i = 1;
-    
+
+    // Filter products with positive sales
+    vector<Product> soldProducts;
     for (const auto& product : products) {
         if (product.getNoOfSells() > 0) {
-            cout << i << ". Name: " << product.getName() << " , ID: " << product.getID()
-                 << " , Copies Sold: " << product.getNoOfSells() << endl;
-            i++;
+            soldProducts.push_back(product);
         }
     }
 
-    if (i == 1) {
+    if (soldProducts.empty()) {
         cout << "No products with positive sales found." << endl;
+        cin.get();
+        return;
     }
 
-    cin.get();
+    // Print header with border lines
+    cout << "+" << string(50, '=') << "+\n";
+    cout << "|" << setw(4) << "Serial No" << "|" << setw(20) << "ID" << "|" << setw(20) << "Name" << "|" << setw(15) << "Copies Sold" << "|\n";
+    cout << "+" << string(50, '=') << "+\n";
+
+    int i = 1;
+
+    for (const auto& product : soldProducts) {
+        // Print product details with border lines
+        cout << "|" << setw(5) << i << "|" << setw(20) << product.getID() << "|" << setw(20) << product.getName()
+             << "|" << setw(15) << product.getNoOfSells() << "|\n";
+        i++;
+    }
+
+    // Print footer with border lines
+    cout << "+" << string(50, '=') << "+\n";
+
     cin.get();
 }
 
+
 void populate_Product_Trie_With_ProductData() {
     for (int i = 1; i <= 7; ++i) {
-        std::string fileName;
-        
-        // Switch case to determine the file based on the value of i
+        string fileName;
+      
         switch (i) {
             case 1:
                 fileName = "grocery.dat";
                 break;
             case 2:
-                fileName = "food&beverage.dat";
+                fileName = "food&bevarage.dat";
                 break;
             case 3:
                 fileName = "electronics.dat";
@@ -144,18 +175,13 @@ void populate_Product_Trie_With_ProductData() {
             case 7:
                 fileName = "homeappliance.dat";
                 break;
-            default:
-                std::cerr << "Invalid option.\n";
-                return;
         }
+         string code=getGenre(fileName);
+        
+        vector<Product> products = readProductsFromFile(fileName);
 
-        // Read product data from the file
-        std::vector<Product> products = readProductsFromFile(fileName);
-
-        // Insert product names and IDs into the Trie
         for (const auto& product : products) {
-            std::string code = product.getName() + product.getID();
-            product_Trie.insert(code);
+            product_Trie.insert(code+product.getID());
         }
     }
 

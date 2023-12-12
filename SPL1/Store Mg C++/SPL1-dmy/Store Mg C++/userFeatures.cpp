@@ -1,16 +1,18 @@
 #include<bits/stdc++.h>
 #include "user.cpp"
+#include "generalFeatures.cpp"
 using namespace std;
 
 void writeNewUserToFile(const User& user) {
     ofstream outFile("user.dat", ios::app);
     if (outFile.is_open()) {
-        outFile << user.getName() << " " << user.getID() << " " << user.getPassword() <<" " << user.getPoints() <<" " << user.getTotalPurchases() << endl;
+        outFile << user.getID() << " " << user.getName() << " " << user.getPassword() <<" " << user.getPoints() <<" " << user.getTotalPurchases() << endl;
         outFile.close();
         cout << "User data written to file successfully." << endl;
-        user_Trie.insert(user.getName()+user.getID());
+        user_Trie.insert(user.getID());
         cin.get();
-    } else {
+    } 
+    else {
         cout << "Unable to open file." << endl;
         cin.get();
     }
@@ -18,7 +20,7 @@ void writeNewUserToFile(const User& user) {
 }
 
 void writeAllUsersToFile(const vector<User>& users) {
-    ofstream outFile("user.dat", ios::app);
+    ofstream outFile("user.dat");
     
     if (!outFile.is_open()) {
         cout << "Unable to open file." << endl;
@@ -27,7 +29,7 @@ void writeAllUsersToFile(const vector<User>& users) {
     }
 
     for (const User& user : users) {
-        outFile << user.getName() << " " << user.getID() << " " << user.getPassword() << endl;
+        outFile << user.getID() << " " << user.getName() << " " << user.getPassword() <<" " << user.getPoints() <<" " << user.getTotalPurchases() << endl;
     }
 
     outFile.close();
@@ -43,8 +45,8 @@ vector<User> readUsersFromFile() {
         string pass;
         double points;
         double totalPurchases;
-        while (inFile >> name >> id >> pass >> points >> totalPurchases) {
-            User user(name, id, pass,points,totalPurchases);
+        while (inFile >> id >> name >> pass >> points >> totalPurchases) {
+            User user(id,name,pass,points,totalPurchases);
             users.push_back(user);
         }
         inFile.close();
@@ -52,35 +54,17 @@ vector<User> readUsersFromFile() {
     return users;
 }
 
-// int searchUser(string nam,string idd,string password){
-//     if()
-//     ifstream inFile("user.dat");
-//     if (inFile.is_open()) {
-//         string name;
-//         string id;
-//         string pass;
-//         while (inFile >> name >> id >> pass) {
-//             if(nam==name && idd==id && password==pass){
-//                  inFile.close();
-//                  return 1;
-//             }
-//         }
-
-//     }
-//     inFile.close();
-//     return 0;
-
-// }
-
 bool signIn() {
     string name;
     string id;
     string pas;
-    cout << "Enter your name: ";
-    cin >> name;
+
     cout << "\nEnter your ID: ";
-    cin >> id;
-    if(user_Trie.search(name+id)==true){
+     cin >> id;
+    cout << "\nEnter your name: ";
+    cin >> name;
+
+    if(user_Trie.search(id)==true){
     cout << "\nEnter your Password: ";
     cin >> pas;
     vector<User> users = readUsersFromFile();
@@ -107,25 +91,23 @@ void signUp() {
     string name;
     string id;
     string pass;
-    cout << "Enter your name: ";
-    cin >> name;
      while(true){
     cout << "Enter your ID: ";
     cin >> id;
-            if(user_Trie.search(name+id)==1){
+            if(user_Trie.search(id)==1){
                 cout<<"This id is already in used please use a separate one...\n";
                 cin.get();
-                cin.get();
-                
+                cin.get();            
             }
             else{
                break; 
             }
     }
-    
+    cout << "Enter your name: ";
+    cin >> name;
     cout << "Enter your Password: ";
     cin >> pass;
-    User newUser(name, id, pass);
+    User newUser(id,name,pass);
     writeNewUserToFile(newUser);
     
 }
@@ -140,9 +122,11 @@ void removeUser(){
      cout<<"\n\t\t\tDelete User Record";
      cout<<"\n\nEnter the name of the user: ";
      cin>>temp;
-     cout<<"\nEnter the ID of the user: ";
+     cout<<"\n\nEnter the ID of the user: ";
      cin>>id;
-     if(user_Trie.search(temp+id)==true){
+     cout<<"\nEnter the name of the user: ";
+     cin>>temp;
+     if(user_Trie.search(id)==true){
      ifstream fin("user.dat",ios::binary);
      for (const auto& user : users) {
         if (user.getName() == temp && user.getID()==id) {
@@ -174,15 +158,27 @@ void removeUser(){
      
 }
 
-void displayUsers(){
-     vector<User> users= readUsersFromFile();
-     cout<<"So here is the list of all users...\n";
-     int i=1;
-       for (const auto& user : users) {
-        cout<<i<<". Name: "<<user.getName()<<" ID: "<<user.getID()<<"\n";
+void displayUsers() {
+    vector<User> users = readUsersFromFile();
+
+    if (users.empty()) {
+        cout << "No users found.\n";
+        cin.get();
+        cin.get();
+        return;
+    }
+
+    cout << "=====================================\n";
+    cout << setw(5) << "No." << setw(10) << "ID" << setw(20) << "NAME" << "\n";
+    cout << "=====================================\n";
+
+    int i = 1;
+    for (const auto& user : users) {
+        cout << setw(5) << i << setw(10) << user.getID() << setw(20) << user.getName() << "\n";
         i++;
-        }
-    cin.get();
+    }
+
+    cout << "=====================================\n";
     cin.get();
 }
 
@@ -191,7 +187,7 @@ void detailsOfAllUsers(){
      cout<<"So here is the deatils all users...\n";
      int i=1;
        for (const auto& user : users) {
-        cout<<i<<". Name: "<<user.getName()<<", ID: "<<user.getID()<<", Password: "<<user.getPassword()<<", Point: "<<user.getPoints()<<", Total Purchases: "<<user.getTotalPurchases()<<"\n";
+        cout<<i<<". ID: "<<user.getID()<<", Name: "<<user.getName()<<", Password: "<<user.getPassword()<<", Point: "<<user.getPoints()<<", Total Purchases: "<<user.getTotalPurchases()<<"\n";
         i++;
         }
     cin.get();
@@ -207,11 +203,11 @@ void deleteAccount(){
      vector<User> users= readUsersFromFile();
      vector<User> us;
      cout<<"\n\t\t\tDelete Account";
-     cout<<"\n\nEnter your name: ";
-     cin>>temp;
-     cout<<"\nEnter your ID: ";
+     cout<<"\n\nEnter your ID: ";
      cin>>id;
-     if(user_Trie.search(temp+id)==true){
+     if(user_Trie.search(id)==true){
+         cout<<"\nEnter your name: ";
+        cin>>temp;
      cout<<"\nEnter your Password: ";
      cin>>pass;
      ifstream fin("user.dat",ios::binary);
@@ -219,8 +215,8 @@ void deleteAccount(){
         if (user.getName() == temp && user.getID()==id && user.getPassword()==pass) {
             i++;
 		  cout<<"\n\t\tAccount deleted\n";
-          cout<<"Account name: "<<user.getName()<<"\nAccount ID: "<<user.getID()<<"\nAccount Password: "<<user.getPassword();
-          user_Trie.remove(temp+id);
+          cout<<"Account ID: "<<user.getID()<<"\nAccount Name: "<<user.getName()<<"\nAccount Password: "<<user.getPassword();
+          user_Trie.remove(id);
           cin.get();
 	    }
 	    else{
@@ -238,7 +234,7 @@ void deleteAccount(){
 	 cin.get();
 }
      else{
-        cout<<"Account with this name and id is not found...\n";
+        cout<<"Account with this id is not found...\n";
         cin.get();
      }
 }
@@ -252,11 +248,11 @@ void changeAccountName(){
      vector<User> users= readUsersFromFile();
      vector<User> us;
 
-     cout<<"\n\nEnter your name: ";
-     cin>>temp;
-     cout<<"\nEnter your ID: ";
+     cout<<"\n\nEnter your ID: ";
      cin>>id;
-     if(user_Trie.search(temp+id)==true){
+     if(user_Trie.search(id)==true){
+     cout<<"\nEnter your name: ";
+     cin>>temp;
      cout<<"\nEnter your Password: ";
      cin>>pass;
 
@@ -271,9 +267,7 @@ void changeAccountName(){
             b=user.changeName(temp,id,pass,nam);
             if(b==1){
 		  cout<<"\n\t\tAccount Updated\n";
-          cout<<"Account name: "<<user.getName()<<"\nAccount ID: "<<user.getID()<<"\nAccount Password: "<<user.getPassword();
-           user_Trie.remove(temp+id);
-            user_Trie.insert(nam+id);
+          cout<<"Account ID: "<<user.getID()<<"\nAccount Name: "<<user.getName()<<"\nAccount Password: "<<user.getPassword();
             }
           us.push_back(user);
           cin.get();
@@ -292,7 +286,7 @@ void changeAccountName(){
 	 cin.get();
 }
      else{
-        cout<<"Account with this name and id is not found...\n";
+        cout<<"Account with this id is not found...\n";
         cin.get();
      }
 }
@@ -306,11 +300,11 @@ void changeAccountPassword(){
      vector<User> users= readUsersFromFile();
      vector<User> us;
 
-     cout<<"\n\nEnter your name: ";
-     cin>>temp;
-     cout<<"\nEnter your ID: ";
+     cout<<"\n\nEnter your ID: ";
      cin>>id;
-     if(user_Trie.search(temp+id)==true){
+     if(user_Trie.search(id)==true){
+    cout<<"\nEnter your name: ";
+     cin>>temp;
      cout<<"\nEnter your Password: ";
      cin>>pass;
 
@@ -325,7 +319,7 @@ void changeAccountPassword(){
             b=user.changePassword(temp,id,pass,p);
             if(b==1){
 		  cout<<"\n\t\tAccount Updated\n";
-          cout<<"Account name: "<<user.getName()<<"\nAccount ID: "<<user.getID()<<"\nAccount Password: "<<user.getPassword();
+          cout<<"Account ID: "<<user.getID()<<"\nAccount Name: "<<user.getName()<<"\nAccount Password: "<<user.getPassword();
             }
           us.push_back(user);
           cin.get();
@@ -345,7 +339,7 @@ void changeAccountPassword(){
 	 cin.get();
      }
      else{
-        cout<<"Account with this name and id is not found...\n";
+        cout<<"Account with this id is not found...\n";
         cin.get();
      }
 }
@@ -354,8 +348,7 @@ void populate_User_Trie_With_UserData() {
     vector<User> users = readUsersFromFile();
     string code;
     for (const auto& user : users) {
-        // Insert the user ID into the trie
-        code=user.getName()+user.getID();
+        code=user.getID();
         user_Trie.insert(code);
     }
 }

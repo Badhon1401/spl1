@@ -2,26 +2,29 @@
 using namespace std;
 
 class User {
-    string name;
     string id;
+    string name;
     string password;
     double points;
     double totalPurchases;
     public:
-    User(string n, string b, string p){
-        name=n;
+    User(){}
+    User(string b,string n, string p){
         id=b;
+        name=n;
         password=p;
         points=0.0;
         totalPurchases=0.0;
     }
-    User(string n, string b, string p,double po,double t){
-        name=n;
+
+    User(string b,string n, string p,double po,double t){
         id=b;
+        name=n;
         password=p;
         points=po;
         totalPurchases=t;
     }
+
     string getName() const {
         return name;
     }

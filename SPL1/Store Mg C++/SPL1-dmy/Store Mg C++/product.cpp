@@ -2,8 +2,9 @@
 using namespace std;
 
 class Product {
-    string name;
+
     string id;
+    string name;
     float price;
     int quantity;
     int sold;
@@ -14,37 +15,36 @@ class Product {
     double totalRatingPoints;
 
 public:
-    Product(string n,string i,float p ,int q){
-    name=n;
+
+    Product(string i,string n,float p ,int q){
     id=i;
+    name=n;
     price=p;
     quantity=q;
     sold = 0;
     discount = 0.0;
     rating = 5.0;
     noOfBuyers = 0;
-    totalRatingPoints = 5.0;
     totalNoOfRaters = 1;
+    totalRatingPoints = 5.0;
     }
-    Product(string n,string i,float p ,int q,int a,float b,float c,int d,int e,double f){
-    name=n;
+
+    Product(string i,string n,float p ,int q,int a,float b,float c,int d,int e,double f){
     id=i;
+    name=n;
     price=p;
     quantity=q;
     sold = a;
     discount = b;
     rating = c;
     noOfBuyers = d;
-    totalRatingPoints = e;
-    totalNoOfRaters = f;
+    totalNoOfRaters = e;
+    totalRatingPoints = f;
     }
-    //void get(string n,string i,float p ,int q);
-    void show();
+
     void withdraw(int qty);
     int reduce(int qty);
     int refill(int qty);
-    int stock_check(string nm,string idd);
-    void sales_show();
     int setDiscount(float disc);
     float getDiscount() const;
     float getPrice() const;
@@ -55,24 +55,22 @@ public:
      int getNoOfRaters() const;
      double getTotalRatingPoints() const;
     void setRating();
+    void setNoOfBuyers();
     string getName() const;
     string getID() const;
 };
 
-void Product::show() {
-    cout << left << setw(20) << name
-             << setw(10) << id
-             << setw(10) << quantity
-             << setw(10) << price
-             << setw(10) << discount << endl;
-}
-
 void Product::withdraw(int qty) {
+    if((quantity-qty)>0){
         quantity -= qty;
         sold += qty;
-        cout << "\n\nStock updated.\n";
-    cin.ignore();
-    cin.get();
+        cin.get();
+    }
+     else{
+            cout<<"Insufficient ammount to withdraw\n";
+            cin.get();
+            
+        }
 }
 int Product::reduce(int qty) {
         if((quantity-qty)>=0 && (qty<1)){
@@ -98,20 +96,6 @@ int Product::refill(int qty) {
         cout<<"Quantity has to be greater than 0 ";
         cin.get();
         return 0;
-    }
-}
-
-int Product::stock_check(string nm,string idd) {
-    if (name == nm && id==idd) {
-        return 1; 
-    } else {
-        return 0;
-    }
-}
-
-void Product::sales_show() {
-    if (sold > 0) {
-        cout << "\n" << name << "\t\t\t" << sold;
     }
 }
 
@@ -162,6 +146,11 @@ int Product::getNoOfSells() const {
 double Product::getTotalRatingPoints() const {
     return totalRatingPoints;
 }
+
+void Product::setNoOfBuyers() {
+    noOfBuyers+=1;
+}
+
 void Product::setRating() {
     float rate;
    while(1){

@@ -4,6 +4,7 @@ using namespace std;
 
 void removeProduct(){
     string file_name=getFileName();
+    string code=getGenre(file_name);
    system("cls");	
     int i=0;
      string temp;
@@ -11,18 +12,18 @@ void removeProduct(){
      vector<Product> products= readProductsFromFile(file_name);
      vector<Product> pro;
      cout<<"\n\t\t\tDelete Product Record";
-     cout<<"\n\nEnter the name of the Product : ";
-     cin>>temp;
-     cout<<"\nEnter the ID of the Product : ";
+     cout<<"\n\nEnter the ID of the Product : ";
      cin>>id;
-     if(product_Trie.search(temp+id)==true){
+     cout<<"\nEnter the name of the Product : ";
+     cin>>temp;
+     if(product_Trie.search(code+id)==true){
      ifstream fin(file_name,ios::binary);
      for (const auto& product : products) {
         if (product.getName() == temp && product.getID()==id) {
             i++;
 		  cout<<"\n\t\tProduct Record deleted\n";
           cout<<"Product name: "<<product.getName()<<"\nProduct ID: "<<product.getID();
-          product_Trie.remove(temp+id);
+          product_Trie.remove(code+id);
           cin.get();
 	    }
 	    else{
@@ -40,7 +41,6 @@ void removeProduct(){
      
         writeAllProductsToFile(pro,file_name);
      
-	 cin.get();
      }
       else{
     cout << "Product with this Name and ID not found." << endl;
@@ -51,23 +51,22 @@ void removeProduct(){
 
 void refillProduct(){
     string file_name=getFileName();
-  system("cls");
-     int i=0;	
-     string temp;
-     string id;
-     vector<Product> products= readProductsFromFile(file_name);
-     vector<Product> pro;
+    string code=getGenre(file_name);
+    system("cls");
+    int i=0;
+    string temp;
+    string id;
+    vector<Product> products= readProductsFromFile(file_name);
+    vector<Product> pro;
 
-     cout<<"\n\nEnter Product name: ";
-     cin>>temp;
-     cout<<"\nEnter Product ID: ";
+     cout<<"\n\nEnter Product ID: ";
      cin>>id;
-
-     if(product_Trie.search(temp+id)==true){
+     cout<<"\nEnter Product name: ";
+     cin>>temp;
+     if(product_Trie.search(code+id)==true){
      ifstream fin(file_name,ios::binary);
      for (auto& product : products) {
         if (product.getName() == temp && product.getID()==id) {
-            i++;
             int num;
             cout<<"\n\nEnter the number of quantity you wanna refill: ";
             cin>>num;
@@ -96,26 +95,27 @@ void refillProduct(){
      
 }
      else{
-        cout<<"Account with this name and id is not found...\n";
+        cout<<"Product with id is not found...\n";
         cin.get();
      }
 }
 
 void reduceProduct(){
     string file_name=getFileName();
-  system("cls");
+    string code=getGenre(file_name);
+    system("cls");
      int i=0;	
      string temp;
      string id;
      vector<Product> products= readProductsFromFile(file_name);
      vector<Product> pro;
 
-     cout<<"\n\nEnter Product name: ";
-     cin>>temp;
-     cout<<"\nEnter Product ID: ";
+     cout<<"\n\nEnter Product ID: ";
      cin>>id;
+      cout<<"\nEnter Product name: ";
+     cin>>temp;
 
-     if(product_Trie.search(temp+id)==true){
+     if(product_Trie.search(code+id)==true){
      ifstream fin(file_name,ios::binary);
      for (auto& product : products) {
         if (product.getName() == temp && product.getID()==id) {
@@ -149,13 +149,15 @@ void reduceProduct(){
 	 cin.get();
 }
      else{
-        cout<<"Account with this name and id is not found...\n";
+        cout<<"Product with this name and id is not found...\n";
+        cin.get();
         cin.get();
      }
 }
 
 void addNewProduct() {
     string file_name=getFileName();
+    string code=getGenre(file_name);
     int num=0;
     string name;
     string id;
@@ -165,26 +167,29 @@ void addNewProduct() {
         system("cls");
         cout << "\nEnter the No. of Products that you wish to add: ";
         cin >> num;
-        if (num > 0) {
+        if (num > 0 && num<101) {
             break;
         } else {
-            cout << "Invalid input...Please enter a number greater than 0...\n";
+            cout << "Invalid input...You can add atmost 100 items and atleast 1 item...\n";
             cin.get();
         }
     }
     for(int i=0;i<num;i++){
     system("cls");
-    cout << "Enter Product Name: ";
-    cin >> name;
+    while(true){
     cout << "Enter Product ID: ";
     cin >> id;
-            if(product_Trie.search(name+id)==1){
-                cout<<"This product is already in the inventory\n";
+            if(product_Trie.search(code+id)==1){
+                cout<<"This product id is already in use please use a separate one...\n";
                 cin.get();
                 cin.get();
-               continue;
-                
             }
+            else{
+                break;
+            }
+    }
+     cout << "Enter Product Name: ";
+    cin >> name;
              while (true) {
             cout << "Enter Price: ";
             cin >> price;
@@ -207,27 +212,27 @@ void addNewProduct() {
             }
         }
 
-    Product pr(name, id, price,quantity);
+    Product pr(id,name,price,quantity);
     writeNewProductToFile(pr,file_name);
     }
     
 }
 
 void applyDiscount() {
-    string file_name=getFileName();
     system("cls");
+    string file_name=getFileName();
+    string code=getGenre(file_name);
     int i = 0;
     string temp;
     string id;
     vector<Product> products = readProductsFromFile(file_name);
     vector<Product> pro;
 
-    cout << "\n\nEnter Product name: ";
-    cin >> temp;
-    cout << "\nEnter Product ID: ";
+    cout << "\n\nEnter Product ID: ";
     cin >> id;
-
-    if (product_Trie.search(temp + id) == true) {
+     cout << "\nEnter Product name: ";
+    cin >> temp;
+    if (product_Trie.search(code + id) == true) {
         ifstream fin(file_name, ios::binary);
         for (auto& product : products) {
             if (product.getName() == temp && product.getID() == id) {
@@ -242,7 +247,7 @@ void applyDiscount() {
                 cout << "\n\t\tDiscount Applied\n\n";
                 cout << "Name: " << product.getName() << " , ID: " << product.getID()
                      << " , Price: " << product.getPrice() << " , Quantity: " << product.getQuantity()
-                     << " , Discount: " << product.getDiscount() << "\n";
+                     << " , Discount: " << product.getDiscount() << "\n\n";
                 }
                 pro.push_back(product);
                 cin.get();
@@ -259,7 +264,6 @@ void applyDiscount() {
 
         writeAllProductsToFile(pro, file_name);
 
-        cin.get();
     } else {
         cout << "Product with this Name and ID not found." << endl;
         cin.get();

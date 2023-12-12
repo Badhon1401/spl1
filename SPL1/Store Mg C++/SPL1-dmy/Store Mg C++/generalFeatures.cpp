@@ -5,21 +5,20 @@ using namespace std;
 
 string getGenre(string file_name) {
     if (file_name == "grocery.dat") {
-        return "grocery";
-    } else if (file_name == "food&beverage.dat") {
-        return "food&beverage";
+        return "grc";
+    } else if (file_name == "food&bevarage.dat") {
+        return "fd&bv";
     } else if (file_name == "electronics.dat") {
-        return "electronics";
+        return "elec";
     } else if (file_name == "book&stationary.dat") {
-        return "book&stationary";
+        return "bk&st";
     } else if (file_name == "fashion&beauty.dat") {
-        return "fashion&beauty";
+        return "fs&bu";
     } else if (file_name == "healthcare.dat") {
-        return "healthcare";
-    } 
+        return "hc";
+    }
     else {
-        // Handle unrecognized file names
-		return "homeappliance";
+		 return "ha";
     }
 }
 string getFileName(){
@@ -48,5 +47,13 @@ string getFileName(){
 	else{
 		return "homeapplainec.dat";
 	}
-	cin.get();
 }
+
+void drawHorizontalLine(int length) {
+    cout << "+";
+    for (int i = 0; i < length; ++i) {
+        cout << "-";
+    }
+    cout << "+" << endl;
+}
+

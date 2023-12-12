@@ -1,6 +1,6 @@
 #include<bits/stdc++.h>
 #include "dealerFeatures.cpp"
-#include "userFeatures.cpp"
+//#include "userFeatures.cpp"
 using namespace std;
 int main()
 {	
@@ -52,11 +52,12 @@ int main()
 		removeProduct();cin.get();goto dealermenu;
 	}
 	else if(i==5)
-	{
+	{	
+		system("cls");
 		salesReport();cin.get();goto dealermenu;
 	}
 	else if(i==6)
-	{
+	{	
 		applyDiscount();goto dealermenu;
 	}
 	else if(i==7)
@@ -65,19 +66,20 @@ int main()
 	}
 	else if(i==8)
 	{
-	displayUsers();goto dealermenu;
+		displayUsers();cin.get();goto dealermenu;
 	}
 	else if(i==9)
-	{
-	reduceProduct();goto dealermenu;
+	{	
+		system("cls");
+		reduceProduct();goto dealermenu;
 	}
 	else 
 	{
 		system("cls");
-	cout<<"\n\n\n\tThanks for visiting my shop...";
-	cin.get();
-	exit(0);
-}
+		cout<<"\n\n\n\tThanks for visiting my shop...";
+		cin.get();
+		exit(0);
+	}
 	}
 	else{
 		system("cls");
