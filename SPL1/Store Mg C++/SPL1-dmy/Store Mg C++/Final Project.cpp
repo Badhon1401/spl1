@@ -4,16 +4,9 @@
 using namespace std;
 int main()
 {	
-	/*
-	loadProducts(tpfb,"food&bevarage.dat");
-	loadProducts(tpg,"grocery.dat");
-	loadProducts(tpfb,"food&bevarage.dat");
-	loadProducts(tpel,"electronics.dat");
-	loadProducts(tpbs,"book&stationary.dat");
-	loadProducts(tpfsb,"fashion&beauty.dat");
-	loadProducts(tph,"healthcare.dat");
-	loadProducts(tpha,"homeapplainec.dat");
-	*/
+
+	populate_Product_Trie_With_ProductData();
+	populate_User_Trie_With_UserData();
 	int i,j;
 	string password="dealer";
 	shop:
@@ -40,25 +33,27 @@ int main()
 	cin>>i;
 	if(i==1)
 	{
-	addnew();
+	system("cls");
+	addNewProduct();
 	goto dealermenu;
 	}
 	else if(i==2)
 	{
 	system("cls");
-	display();cin.get();goto dealermenu;
+	displayProducts();cin.get();goto dealermenu;
 	}
 	else if(i==3)
 	{   system("cls");
-		refill();cin.get();goto dealermenu;
+		refillProduct();cin.get();goto dealermenu;
 	}
 	else if(i==4)
-	{
-		remove();cin.get();goto dealermenu;
+	{	
+		system("cls");
+		removeProduct();cin.get();goto dealermenu;
 	}
 	else if(i==5)
 	{
-		sales();cin.get();goto dealermenu;
+		salesReport();cin.get();goto dealermenu;
 	}
 	else if(i==6)
 	{
@@ -70,11 +65,11 @@ int main()
 	}
 	else if(i==8)
 	{
-	listOfUsers();goto dealermenu;
+	displayUsers();goto dealermenu;
 	}
 	else if(i==9)
 	{
-	listOfUsers();goto dealermenu;
+	reduceProduct();goto dealermenu;
 	}
 	else 
 	{
@@ -124,7 +119,7 @@ int main()
 	else if(h==2)
 	{
 	system("cls");
-	display();cin.get();goto custmenu;
+	displayProducts();cin.get();goto custmenu;
 	}
 	else if(h==3)
 	{

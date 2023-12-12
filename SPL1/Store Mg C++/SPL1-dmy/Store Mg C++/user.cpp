@@ -15,6 +15,13 @@ class User {
         points=0.0;
         totalPurchases=0.0;
     }
+    User(string n, string b, string p,double po,double t){
+        name=n;
+        id=b;
+        password=p;
+        points=po;
+        totalPurchases=t;
+    }
     string getName() const {
         return name;
     }
@@ -29,6 +36,12 @@ class User {
     }
     void depositPoints(double b){
         points=points+b;
+    }
+    double getTotalPurchases() const {
+        return totalPurchases;
+    }
+    void depositPurchaseAmount(double b){
+       totalPurchases=totalPurchases+b;
     }
     int changeName(string a,string b,string c,string nam){
             if(name==a && id==b && password==c){
