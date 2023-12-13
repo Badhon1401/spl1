@@ -54,7 +54,7 @@ public:
     int getNoOfSells() const;
      int getNoOfRaters() const;
      double getTotalRatingPoints() const;
-    void setRating();
+    void setRating(float f);
     void setNoOfBuyers();
     string getName() const;
     string getID() const;
@@ -151,19 +151,10 @@ void Product::setNoOfBuyers() {
     noOfBuyers+=1;
 }
 
-void Product::setRating() {
-    float rate;
-   while(1){
-     cout << "Enter Rating: ";
-        cin >> rate;
-        if(rate<0.0 && rate>10.0){
-            cout<<"Invalid Quantity! It has to be in between 0-10 \n";
-            cin.get();
-        }
-        else{
+void Product::setRating(float f) {
+           float rate=f;
            totalRatingPoints=totalRatingPoints+rate;
            totalNoOfRaters=totalNoOfRaters+1;
            rating=totalRatingPoints/totalNoOfRaters;
-        }
-        }
+        
 }

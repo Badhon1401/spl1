@@ -15,7 +15,7 @@ int main()
 	cout<<"\n\t\t   1. Dealer Mode\n\n\t\t   2. Customer Mode\n\n\t\t   3.Exit";
 	cout<<"\n====================================================";
 	cout<<"\nEnter Your Choice:";
-	cin>>j;
+	j=getNumericInput();
 	if(j==1)
 	{
 	system("cls");
@@ -27,10 +27,10 @@ int main()
 	dealermenu:
 	system("cls");
 	cout<<"=================================================================";
-	cout<<"\n\n\t\t\t    DEALER MENU\n1. Add new product\n2. Display stock\n3. Refill\n4. Remove an item\n5. Sales Report\n6. Apply discount\n7. Remove User\n8. List of Users\n9. Reduce\n10. Exit:";
+	cout<<"\n\n\t\t\t    DEALER MENU\n1. Add new product\n2. Display stock\n3. Refill\n4. Remove an item\n5. Sales Report\n6. Apply discount\n7. Remove User\n8. List of Users\n9. Reduce\n10. User Performance\n11. Exit:";
 	cout<<"\n\n\n==========================END OF MENU=============================";
 	cout<<"\n\n Enter your Choice :\t";
-	cin>>i;
+	i=getNumericInput();
 	if(i==1)
 	{
 	system("cls");
@@ -73,6 +73,11 @@ int main()
 		system("cls");
 		reduceProduct();goto dealermenu;
 	}
+	else if(i==10)
+	{	
+		system("cls");
+		printUsersByTotalPurchases();cin.get();goto dealermenu;
+	}
 	else 
 	{
 		system("cls");
@@ -97,7 +102,7 @@ int main()
 	cout<<"\n\n\t\t\t    CUSTOMER MENU\n1. Sign in\n2. Sign up\n3. Exit\n";
 	cout<<"\n==========================END OF MENU=============================";
 	cout<<"\n\n Enter your Choice :\t";
-	cin>>i;
+	i=getNumericInput();
 	if(i==1){
 	system("cls");
 	bool b;
@@ -109,10 +114,10 @@ int main()
 		custmenu:
 	system("cls");
 	cout<<"=================================================================";
-	cout<<"\n\n1. Purchase\n2. Display stock\n3. Delete Account\n4. Change Account Name\n5. Change Account Password\n6. Exit:";
+	cout<<"\n\n1. Purchase\n2. Display stock\n3. Delete Account\n4. Change Account Name\n5. Change Account Password\n6. Recommendation\n7. Do rating\n8. Exit:";
 	cout<<"\n\n\n==========================END OF MENU=============================";
 		cout<<"\n\n Enter your Choice :\t";
-		cin>>h;
+		h=getNumericInput();
 		if (h==1)
 	{
 	system("cls");
@@ -137,6 +142,35 @@ int main()
 	{
 	system("cls");
 	changeAccountPassword();cin.get();goto custmenu;
+	}
+	else if(h==6)
+	{	
+		system("cls");
+		int n;
+		cout<<"Choose one of the option...\n1. Recommendation Based On Rating\n2. Recommendation Based On No of Buyers\n3. Recommendation Based On No of Copies Sold..\n";
+		n=getNumericInput();
+		system("cls");
+		if(n==1){
+			string file_name=getFileName();
+			vector<Product> products=readProductsFromFile(file_name);
+			productsByRating(products);	
+		}
+		if(n==2){
+			string file_name=getFileName();
+			vector<Product> products=readProductsFromFile(file_name);
+			productsByBuyers(products);	
+		}
+		if(n==3){
+			string file_name=getFileName();
+			vector<Product> products=readProductsFromFile(file_name);
+			productsBySoldCopies(products);	
+		}
+		cin.get();goto custmenu;
+	}
+	else if(h==7)
+	{
+	system("cls");
+	doRating();cin.get();goto custmenu;
 	}
     else 
 	{

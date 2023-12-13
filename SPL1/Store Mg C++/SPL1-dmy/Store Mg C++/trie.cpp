@@ -1,7 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-// Trie Node
 class TrieNode {
 public:
     unordered_map<char, TrieNode*> children;
@@ -10,17 +9,15 @@ public:
     TrieNode() : isEndOfWord(false) {}
 };
 
-// Trie Class
 class Trie {
 private:
     TrieNode* root;
 
     bool removeRecursive(TrieNode* current, const string& str, size_t depth) {
     if (depth == str.length()) {
-        // If the string exists in the Trie, mark the end of the word as false
         if (current->isEndOfWord) {
             current->isEndOfWord = false;
-            return current->children.empty();  // Remove the node if it has no children
+            return current->children.empty();  
         }
         return false;
     }
@@ -42,7 +39,6 @@ private:
 public:
     Trie() : root(new TrieNode()) {}
 
-    // Insert a string into the trie
     void insert(const string& str) {
         TrieNode* current = root;
         for (char ch : str) {
@@ -54,7 +50,6 @@ public:
         current->isEndOfWord = true;
     }
 
-    // Search for a string in the trie
     bool search(const string& str) {
         TrieNode* current = root;
         for (char ch : str) {
@@ -66,7 +61,6 @@ public:
         return current->isEndOfWord;
     }
 
-    // Remove a string from the trie
     void remove(const string& str) {
         if (str.empty()) {
             return;

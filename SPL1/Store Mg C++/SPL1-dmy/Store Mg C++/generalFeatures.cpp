@@ -3,6 +3,26 @@
 #include "trie.cpp"
 using namespace std;
 
+int getNumericInput() {
+    int numericInput;
+    while (true) {
+        if (cin >> numericInput) {
+            if (cin.peek() == '\n') {
+                break;  
+            } else {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "Invalid input. Please enter only numeric values.\n";
+            }
+        } else {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Invalid input. Please enter only numeric values.\n";
+        }
+    }
+    return numericInput;
+}
+
 string getGenre(string file_name) {
     if (file_name == "grocery.dat") {
         return "grc";
@@ -24,7 +44,7 @@ string getGenre(string file_name) {
 string getFileName(){
 	int i;
 	cout<<"Enter the category of products...\n1.Grocery\n2.Foods and Bevareges\n3.Elecetronics\n4.Books and stationary\n5.Fasion and Beuty\n6.HealthCare\n7.Home Appliances\n";
-	cin>>i;
+	i=getNumericInput();
 	system("cls");
 	if(i==1){
 		return "grocery.dat";
@@ -48,12 +68,3 @@ string getFileName(){
 		return "homeapplainec.dat";
 	}
 }
-
-void drawHorizontalLine(int length) {
-    cout << "+";
-    for (int i = 0; i < length; ++i) {
-        cout << "-";
-    }
-    cout << "+" << endl;
-}
-

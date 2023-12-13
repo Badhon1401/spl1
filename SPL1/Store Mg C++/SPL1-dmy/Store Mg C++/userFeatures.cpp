@@ -169,12 +169,12 @@ void displayUsers() {
     }
 
     cout << "=====================================\n";
-    cout << setw(5) << "No." << setw(10) << "ID" << setw(20) << "NAME" << "\n";
+    cout << setw(4) << "No." << setw(10) << "ID" << setw(10) << "NAME" << "\n";
     cout << "=====================================\n";
 
     int i = 1;
     for (const auto& user : users) {
-        cout << setw(5) << i << setw(10) << user.getID() << setw(20) << user.getName() << "\n";
+        cout << setw(4) << i << setw(10) << user.getID() << setw(10) << user.getName() << "\n";
         i++;
     }
 
@@ -351,4 +351,33 @@ void populate_User_Trie_With_UserData() {
         code=user.getID();
         user_Trie.insert(code);
     }
+}
+
+bool compareUsersByTotalPurchases(const User& user1, const User& user2) {
+    return user1.getTotalPurchases() > user2.getTotalPurchases();
+}
+
+void printUsersByTotalPurchases() {
+    vector<User> users = readUsersFromFile();
+
+    if (users.empty()) {
+        cout << "No users found.\n";
+        cin.get();
+        return;
+    }
+
+    sort(users.begin(), users.end(), compareUsersByTotalPurchases);
+
+    cout << "=============================================\n";
+    cout << setw(4) << "No." << setw(10) << "ID" << setw(10) << "NAME" << setw(10) << "Total Purchases" << "\n";
+    cout << "=============================================\n";
+
+    int i = 1;
+    for (const auto& user : users) {
+        cout << setw(4) << i << setw(10) << user.getID() << setw(10) << user.getName() << setw(10) << user.getTotalPurchases() << "\n";
+        i++;
+    }
+
+    cout << "=============================================\n";
+    cin.get();
 }

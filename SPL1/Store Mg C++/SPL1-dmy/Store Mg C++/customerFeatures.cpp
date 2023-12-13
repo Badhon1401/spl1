@@ -1,12 +1,12 @@
 #include<bits/stdc++.h>
 #include "productFeatures.cpp"
 using namespace std;
+
 void customerShopping() {
-    // Assuming you have a way to obtain user information (ID, name) within the function
     string name;
     string id;
     string pas;
-    int i=0;
+    int i = 0;
     cout << "\nEnter your ID: ";
     cin >> id;
     cout << "\nEnter your name: ";
@@ -22,7 +22,7 @@ void customerShopping() {
             if (user.getName() == name && user.getID() == id && user.getPassword() == pas) {
                 currentUser = user;
                 cout << "Welcome, " << currentUser.getName() << "!" << endl;
-                cin.get();
+                cin.ignore();  // Ignore the newline character left in the buffer
                 system("cls");
                 break;
             }
@@ -38,61 +38,57 @@ void customerShopping() {
         int continueShopping = 1;
 
         while (continueShopping == 1) {
-
-            string file_name = getFileName(); // Assuming you have a function to get the file name
-            string code=getGenre(file_name);
+            string file_name = getFileName();
+            string code = getGenre(file_name);
             string productId;
             string productName;
             int quantity;
-            cin.get();
+
+            cin.ignore();  // Ignore the newline character left in the buffer
             cout << "\nEnter product ID: ";
             cin >> productId;
             cout << "\nEnter product name: ";
             cin >> productName;
             cout << "Enter quantity: ";
-            cin >> quantity;
+            quantity = getNumericInput();
 
-            // Assuming you have a ProductTrie for checking product existence
-            if (product_Trie.search(code+productId)) {
+            if (product_Trie.search(code + productId)) {
                 vector<Product> products = readProductsFromFile(file_name);
-
-                // Find the product in the inventory
                 for (size_t i = 0; i < products.size(); ++i) {
                     if (products[i].getID() == productId && products[i].getName() == productName) {
                         if (products[i].getQuantity() >= quantity) {
                             products[i].withdraw(quantity);
                             purchases.push_back(make_pair(products[i], quantity));
                             products[i].setNoOfBuyers();
-
                             cout << "Product added to your cart.\n";
                             i++;
                         } else {
                             cout << "Insufficient stock for this quantity.\n";
+                            k++;
                         }
                         break;
                     }
                 }
 
-                cout << "Do you want to continue shopping? (1 for Yes, 0 for No): ";
-                cin >> continueShopping;
-                writeAllProductsToFile(products, file_name);
-                system("cls");
+                    cout << "Do you want to continue shopping? (1 for Yes, 0 for No): ";
+                    continueShopping = getNumericInput();
+                    writeAllProductsToFile(products, file_name);
+                    system("cls");
+               
             } else {
                 cout << "Product with this ID not found. Please check the ID and try again." << endl;
                 cin.get();
                 cout << "Do you want to continue shopping? (1 for Yes, 0 for No): ";
-                cin >> continueShopping;
-                if(continueShopping==0 && i==0){
-                system("cls");
-                return;
-                }
-                else{
+                continueShopping = getNumericInput();
+                if (continueShopping == 0 && i == 0) {
+                    system("cls");
+                    return;
+                } else {
                     system("cls");
                 }
             }
         }
 
-       // Print the receipt
         cout << "\n\n=============================\n";
         cout << "       Payment Receipt\n";
         cout << "=============================\n";
@@ -110,7 +106,6 @@ void customerShopping() {
 
         cout << "Thank you for shopping with us!\n";
         currentUser.depositPurchaseAmount(totalAmount);
-        // Update the user's information in the file
         vector<User> updatedUsers;
         for (const auto& user : users) {
             if (user.getID() == currentUser.getID()) {

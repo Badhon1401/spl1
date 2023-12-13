@@ -69,7 +69,7 @@ void refillProduct(){
         if (product.getName() == temp && product.getID()==id) {
             int num;
             cout<<"\n\nEnter the number of quantity you wanna refill: ";
-            cin>>num;
+            num=getNumericInput();
             int b=0;
             b=product.refill(num);
             if(b==1){
@@ -122,7 +122,7 @@ void reduceProduct(){
             i++;
             int num;
             cout<<"\n\nEnter the number of quantity you wanna Reduce: ";
-            cin>>num;
+            num=getNumericInput();
             int b=0;
             b=product.reduce(num);
             if(b==1){
@@ -166,7 +166,7 @@ void addNewProduct() {
     while (true) {
         system("cls");
         cout << "\nEnter the No. of Products that you wish to add: ";
-        cin >> num;
+        num=getNumericInput();
         if (num > 0 && num<101) {
             break;
         } else {
@@ -203,7 +203,7 @@ void addNewProduct() {
 
         while (true) {
             cout << "Enter quantity: ";
-            cin >> quantity;
+            quantity=getNumericInput();
             if (quantity < 1) {
                 cout << "\nInvalid Quantity! It has to be 1 or more...\n";
                 cin.get();
@@ -239,9 +239,8 @@ void applyDiscount() {
                 i++;
                 float disc;
                 cout << "\nEnter the discount percentage: ";
-                cin >> disc;
+               disc=getNumericInput();
 
-                // Apply discount using the setDiscount function
                 int b=product.setDiscount(disc);
                 if(b==1){
                 cout << "\n\t\tDiscount Applied\n\n";

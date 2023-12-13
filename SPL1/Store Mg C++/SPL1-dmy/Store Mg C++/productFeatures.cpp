@@ -114,7 +114,6 @@ void salesReport() {
 
     cout << "Sales Report:\n";
 
-    // Filter products with positive sales
     vector<Product> soldProducts;
     for (const auto& product : products) {
         if (product.getNoOfSells() > 0) {
@@ -128,24 +127,22 @@ void salesReport() {
         return;
     }
 
-    // Print header with border lines
-    cout << "+" << string(50, '=') << "+\n";
-    cout << "|" << setw(4) << "Serial No" << "|" << setw(20) << "ID" << "|" << setw(20) << "Name" << "|" << setw(15) << "Copies Sold" << "|\n";
-    cout << "+" << string(50, '=') << "+\n";
+    cout << "====================================================================\n";
+   cout << "                       Sales report                                 \n";
+     cout << "====================================================================\n";
+    cout << setw(5) << "Serial No" << setw(10) << "ID" << setw(20) << "Name" << setw(10) << "No of Sells \n";
+    cout << "====================================================================\n";
 
     int i = 1;
-
-    for (const auto& product : soldProducts) {
-        // Print product details with border lines
-        cout << "|" << setw(5) << i << "|" << setw(20) << product.getID() << "|" << setw(20) << product.getName()
-             << "|" << setw(15) << product.getNoOfSells() << "|\n";
+    for (const auto& product : products) {
+        cout << setw(5) << i << setw(10) << product.getID() << setw(20) << product.getName()
+             << setw(15) << fixed << setprecision(2) << product.getNoOfSells() << "\n";
         i++;
     }
 
-    // Print footer with border lines
-    cout << "+" << string(50, '=') << "+\n";
+   cout << "====================================================================\n";
+   cin.get();
 
-    cin.get();
 }
 
 
@@ -185,4 +182,153 @@ void populate_Product_Trie_With_ProductData() {
         }
     }
 
+}
+
+void printProductsBasedOnRating(const vector<Product>& products) {
+    cout << "Products with details (Serial No, ID, Name, Rating):\n\n";
+     cout << "====================================================================\n";
+    cout << setw(4) << "Serial No" << setw(10) << "ID" << setw(10) << "Name" << setw(10) << "Rating \n";
+    cout << "====================================================================\n";
+
+    int i = 1;
+    for (const auto& product : products) {
+        cout << setw(4) << i << setw(10) << product.getID() << setw(10) << product.getName()
+             << setw(10) << fixed << setprecision(2) << product.getRating() << "\n";
+        i++;
+    }
+
+   cout << "====================================================================\n";
+   cin.get();
+}
+
+void printProductsBasedOnBuyers(const vector<Product>& products) {
+    cout << "Products with details (Serial No, ID, Name, No of Buyers):\n\n";
+     cout << "====================================================================\n";
+    cout << setw(4) << "Serial No" << setw(10) << "ID" << setw(10) << "Name" << setw(10) << "No of Buyers \n";
+    cout << "====================================================================\n";
+
+    int i = 1;
+    for (const auto& product : products) {
+        cout << setw(4) << i << setw(10) << product.getID() << setw(10) << product.getName()
+             << setw(10) << fixed << setprecision(2) << product.getNoOfBuyers() << "\n";
+        i++;
+    }
+
+   cout << "====================================================================\n";
+   cin.get();
+}
+
+void printProductsBasedOnSoldCopies(const vector<Product>& products) {
+    cout << "Products with details (Serial No, ID, Name, No of Copies Sold):\n\n";
+     cout << "====================================================================\n";
+    cout << setw(4) << "Serial No" << setw(10) << "ID" << setw(10) << "Name" << setw(10) << "No of Sells \n";
+    cout << "====================================================================\n";
+
+    int i = 1;
+    for (const auto& product : products) {
+        cout << setw(4) << i << setw(10) << product.getID() << setw(10) << product.getName()
+             << setw(10) << fixed << setprecision(2) << product.getNoOfSells() << "\n";
+        i++;
+    }
+
+   cout << "====================================================================\n";
+   cin.get();
+}
+
+
+bool compareByRating(const Product& a, const Product& b) {
+    return a.getRating() > b.getRating();
+}
+
+bool compareByBuyers(const Product& a, const Product& b) {
+    return a.getNoOfBuyers() > b.getNoOfBuyers();
+}
+
+bool compareBySoldCopies(const Product& a, const Product& b) {
+    return a.getNoOfSells() > b.getNoOfSells();
+}
+
+void productsByRating(const vector<Product>& products) {
+    vector<Product> sortedProducts = products;
+    sort(sortedProducts.begin(), sortedProducts.end(), compareByRating);
+    cin.get();
+    printProductsBasedOnRating(sortedProducts);
+}
+
+void productsByBuyers(const vector<Product>& products) {
+    vector<Product> sortedProducts = products;
+    sort(sortedProducts.begin(), sortedProducts.end(), compareByBuyers);
+    cin.get();
+   printProductsBasedOnBuyers(sortedProducts);
+}
+
+void productsBySoldCopies(const vector<Product>& products) {
+    vector<Product> sortedProducts = products;
+    sort(sortedProducts.begin(), sortedProducts.end(), compareBySoldCopies);
+    cin.get();
+    printProductsBasedOnSoldCopies(sortedProducts);
+    cin.get();
+}
+
+void doRating() {
+    string file_name = getFileName();
+    vector<Product> products = readProductsFromFile(file_name);
+
+    if (products.empty()) {
+        cout << "No products found in the given category.\n";
+        cin.get();
+        return;
+    }
+    string id;
+    string name;
+    cout << "Enter the product ID: ";
+    cin >> id;
+
+    cout << "Enter the product name: ";
+    cin>>name;
+    string code=getGenre(file_name);
+    if(product_Trie.search(code+id)){
+    bool productFound = false;
+
+    for (auto& product : products) {
+        if (product.getID() == id && product.getName() == name) {
+            productFound = true;
+            cout << "\nExisting Details:\n";
+            cout << "ID: " << product.getID() << "\nName: " << product.getName()
+                 << "\nRating: " << product.getRating() << "\n";
+                 cin.get();
+                 float rate;
+   while(1){
+     cout << "Enter Rating: ";
+      rate=getNumericInput();
+            if(rate<0.0 || rate>10.0){
+                cout<<"Invalid Quantity! It has to be in between 0-10 \n";
+                cin.get();
+            }
+            else{
+                product.setRating(rate);           
+                break;
+            }
+    }
+            cout << "\nUpdated Details:\n";
+            cout << "ID: " << product.getID() << "\nName: " << product.getName()
+                 << "\nRating: " << product.getRating() << "\n";
+
+            writeAllProductsToFile(products, file_name);
+            break;
+        }
+    }
+
+    if (!productFound) {
+        cout << "Product not found in the given category.\n";
+        cin.get();
+    }
+
+    cin.get();
+    }
+    else{
+        cout<<"Product with this id and name not found...\n";
+        cin.get();
+        cin.get();
+    }
 }
