@@ -6,13 +6,12 @@ void customerShopping() {
     string name;
     string id;
     string pas;
-    int i = 0;
     cout << "\nEnter your ID: ";
     cin >> id;
     cout << "\nEnter your name: ";
     cin >> name;
 
-    if (user_Trie.search(id)) {
+    if (user_id_Trie.search(id)) {
         cout << "\nEnter your Password: ";
         cin >> pas;
         vector<User> users = readUsersFromFile();
@@ -22,7 +21,7 @@ void customerShopping() {
             if (user.getName() == name && user.getID() == id && user.getPassword() == pas) {
                 currentUser = user;
                 cout << "Welcome, " << currentUser.getName() << "!" << endl;
-                cin.ignore();  // Ignore the newline character left in the buffer
+                cin.get();
                 system("cls");
                 break;
             }
@@ -34,26 +33,36 @@ void customerShopping() {
             return;
         }
 
+        string file_name = getFileName();
+        string code = getGenre(file_name);
         vector<pair<Product, int>> purchases;
         int continueShopping = 1;
-
+        string dm_file_name="dm"+file_name;
+        vector<Product> products = readProductsFromFile(file_name);
+        writeAllProductsToFile(products,dm_file_name);
         while (continueShopping == 1) {
-            string file_name = getFileName();
-            string code = getGenre(file_name);
+            int i=0;
+            cout<<"Do you wanna see the inventory or not? Is enter 1 otherwise 0\n";
+            i=getNumericInput();
+            cin.get();
+            if(i==1){
+
+                displayProducts(dm_file_name);
+            }
+            system("cls");
             string productId;
             string productName;
             int quantity;
 
-            cin.ignore();  // Ignore the newline character left in the buffer
+            cin.get();
             cout << "\nEnter product ID: ";
             cin >> productId;
             cout << "\nEnter product name: ";
             cin >> productName;
             cout << "Enter quantity: ";
-            quantity = getNumericInput();
+            quantity = getPositiveNumericInput();
 
-            if (product_Trie.search(code + productId)) {
-                vector<Product> products = readProductsFromFile(file_name);
+            if (product_id_Trie.search(code + productId)) {
                 for (size_t i = 0; i < products.size(); ++i) {
                     if (products[i].getID() == productId && products[i].getName() == productName) {
                         if (products[i].getQuantity() >= quantity) {
@@ -64,7 +73,6 @@ void customerShopping() {
                             i++;
                         } else {
                             cout << "Insufficient stock for this quantity.\n";
-                            k++;
                         }
                         break;
                     }
@@ -72,7 +80,7 @@ void customerShopping() {
 
                     cout << "Do you want to continue shopping? (1 for Yes, 0 for No): ";
                     continueShopping = getNumericInput();
-                    writeAllProductsToFile(products, file_name);
+                    writeAllProductsToFile(products, dm_file_name);
                     system("cls");
                
             } else {
@@ -102,10 +110,14 @@ void customerShopping() {
         }
         cout << "---------------------------------\n";
         cout << "Total Amount with discount:\t" << fixed << setprecision(2) << totalAmount << endl;
-        cout << "=============================\n";
-
-        cout << "Thank you for shopping with us!\n";
+        cout << "=============================\n\n";
+        int x;
+        cout<<"Enter one of the option...\n1. Go for final payment\n2. Cancel Order\n";;
+        x=getNumericInput(1,2);
+        if(x==1){
+        if(currentUser.getBalance()>=totalAmount){
         currentUser.depositPurchaseAmount(totalAmount);
+         currentUser.withDrawMoney(totalAmount);
         vector<User> updatedUsers;
         for (const auto& user : users) {
             if (user.getID() == currentUser.getID()) {
@@ -114,10 +126,25 @@ void customerShopping() {
                 updatedUsers.push_back(user);
             }
         }
-
+         remove(dm_file_name.c_str());
+        writeAllProductsToFile(products,file_name);
         writeAllUsersToFile(updatedUsers);
-
+        cout << "Thank you for shopping with us!\n";
         cin.get();
+        }
+        else{
+            system("cls");
+            cout<<"You dont have enough balance to pay the bill. So sorry we have to cancel the order...\n";
+            cin.get();
+            cin.get();
+        }
+        }
+        if(x==2){
+            system("cls");
+            cout<<"Your order has been canceled. Thanks for visiting our shop...\n";
+            cin.get();
+            cin.get();
+        }
     } else {
         cout << "Account with this ID not found. Please sign up." << endl;
         cin.get();

@@ -16,14 +16,14 @@ void removeProduct(){
      cin>>id;
      cout<<"\nEnter the name of the Product : ";
      cin>>temp;
-     if(product_Trie.search(code+id)==true){
+     if(product_id_Trie.search(code+id)==true){
      ifstream fin(file_name,ios::binary);
      for (const auto& product : products) {
         if (product.getName() == temp && product.getID()==id) {
             i++;
 		  cout<<"\n\t\tProduct Record deleted\n";
           cout<<"Product name: "<<product.getName()<<"\nProduct ID: "<<product.getID();
-          product_Trie.remove(code+id);
+          product_id_Trie.remove(code+id);
           cin.get();
 	    }
 	    else{
@@ -63,9 +63,11 @@ void refillProduct(){
      cin>>id;
      cout<<"\nEnter Product name: ";
      cin>>temp;
-     if(product_Trie.search(code+id)==true){
+     if(product_id_Trie.search(code+id)==true){
      ifstream fin(file_name,ios::binary);
+     int k=0;
      for (auto& product : products) {
+        if(k==0){
         if (product.getName() == temp && product.getID()==id) {
             int num;
             cout<<"\n\nEnter the number of quantity you wanna refill: ";
@@ -73,30 +75,39 @@ void refillProduct(){
             int b=0;
             b=product.refill(num);
             if(b==1){
+                i++;
 		  cout<<"\n\t\tProduct Updated\n";
          cout<<"Name: "<<product.getName()<<" , ID: "<<product.getID()<<" , Price: "<<product.getPrice()<<" , Quantity: "<<product.getQuantity()<<"\n";
          cin.get();
             }
+            if(b==0){
+                return;
+            }
           pro.push_back(product);
+          k=1;
 	    }
 	    else{
           pro.push_back(product);
         }
+        }
+        else{
+             pro.push_back(product);
+        }
     }
     fin.close();
-   const char* old_file_name = file_name.c_str();
-    remove(old_file_name);
     if(i==0){
         cout<<"Product not found...\n";
         cin.get();
+        return;
     }
    
+   const char* old_file_name = file_name.c_str();
+    remove(old_file_name);
         writeAllProductsToFile(pro,file_name);
      
 }
      else{
-        cout<<"Product with id is not found...\n";
-        cin.get();
+        cout<<"Product with this id is not found...\n";
      }
 }
 
@@ -115,9 +126,11 @@ void reduceProduct(){
       cout<<"\nEnter Product name: ";
      cin>>temp;
 
-     if(product_Trie.search(code+id)==true){
+     if(product_id_Trie.search(code+id)==true){
+        int k=0;
      ifstream fin(file_name,ios::binary);
      for (auto& product : products) {
+        if(k==0){
         if (product.getName() == temp && product.getID()==id) {
             i++;
             int num;
@@ -130,11 +143,19 @@ void reduceProduct(){
          cout<<"Name: "<<product.getName()<<" , ID: "<<product.getID()<<" , Price: "<<product.getPrice()<<" , Quantity: "<<product.getQuantity()<<"\n";
 
             }
+             if(b==0){
+                return;
+            }
           pro.push_back(product);
+          k=1;
           cin.get();
 	    }
 	    else{
           pro.push_back(product);
+        }
+        }
+        else{
+            pro.push_back(product);
         }
     }
     fin.close();
@@ -179,9 +200,8 @@ void addNewProduct() {
     while(true){
     cout << "Enter Product ID: ";
     cin >> id;
-            if(product_Trie.search(code+id)==1){
+            if(product_id_Trie.search(code+id)==1){
                 cout<<"This product id is already in use please use a separate one...\n";
-                cin.get();
                 cin.get();
             }
             else{
@@ -232,7 +252,7 @@ void applyDiscount() {
     cin >> id;
      cout << "\nEnter Product name: ";
     cin >> temp;
-    if (product_Trie.search(code + id) == true) {
+    if (product_id_Trie.search(code + id) == true) {
         ifstream fin(file_name, ios::binary);
         for (auto& product : products) {
             if (product.getName() == temp && product.getID() == id) {
@@ -269,3 +289,56 @@ void applyDiscount() {
     }
 }
 
+void doGiveaway() {
+    double rewardPercentage = 0.05;  
+    double maxRewardAmount = 10000.0;  
+
+    vector<User> users = readUsersFromFile();
+
+    if (users.empty()) {
+        cout << "No users found.\n";
+        cin.get();
+        return;
+    }
+
+    int i = 1;
+    for (auto& user : users) {
+        double rewardAmount = user.getTotalPurchases() * rewardPercentage;
+        rewardAmount = min(rewardAmount, maxRewardAmount);  
+
+        user.depositsMoney(rewardAmount);
+
+        cout << setw(4) << i << setw(10) << user.getID() << setw(10) << user.getName()
+             << setw(15) << user.getTotalPurchases() << setw(15) << rewardAmount << "\n";
+        i++;
+    }
+
+    writeAllUsersToFile(users);
+
+    cout << "Giveaway successful! Reward amounts deposited.\n";
+    cin.get();
+}
+
+void resetUserPerformance() {
+    vector<User> users = readUsersFromFile();
+
+    if (users.empty()) {
+        cout << "No users found.\n";
+        cin.get();
+        return;
+    }
+
+    int i = 1;
+    for (auto& user : users) {
+        cout << setw(4) << i << setw(10) << user.getID() << setw(10) << user.getName()
+             << setw(15) << user.getTotalPurchases() << "\n";
+
+        user.depositPurchaseAmount(-user.getTotalPurchases());  // Reset total purchases to 0.0
+        i++;
+    }
+
+    writeAllUsersToFile(users);
+
+    cout << "User performance reset successful! Total purchases set to 0.0.\n";
+    cin.get();
+}

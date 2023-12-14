@@ -6,10 +6,10 @@ using namespace std;
 void writeNewUserToFile(const User& user) {
     ofstream outFile("user.dat", ios::app);
     if (outFile.is_open()) {
-        outFile << user.getID() << " " << user.getName() << " " << user.getPassword() <<" " << user.getPoints() <<" " << user.getTotalPurchases() << endl;
+        outFile << user.getID() << " " << user.getName() << " " << user.getPassword() <<" " << user.getBalance() <<" " << user.getTotalPurchases() << endl;
         outFile.close();
         cout << "User data written to file successfully." << endl;
-        user_Trie.insert(user.getID());
+        user_id_Trie.insert(user.getID());
         cin.get();
     } 
     else {
@@ -29,7 +29,7 @@ void writeAllUsersToFile(const vector<User>& users) {
     }
 
     for (const User& user : users) {
-        outFile << user.getID() << " " << user.getName() << " " << user.getPassword() <<" " << user.getPoints() <<" " << user.getTotalPurchases() << endl;
+        outFile << user.getID() << " " << user.getName() << " " << user.getPassword() <<" " << user.getBalance() <<" " << user.getTotalPurchases() << endl;
     }
 
     outFile.close();
@@ -64,7 +64,7 @@ bool signIn() {
     cout << "\nEnter your name: ";
     cin >> name;
 
-    if(user_Trie.search(id)==true){
+    if(user_id_Trie.search(id)==true){
     cout << "\nEnter your Password: ";
     cin >> pas;
     vector<User> users = readUsersFromFile();
@@ -94,7 +94,7 @@ void signUp() {
      while(true){
     cout << "Enter your ID: ";
     cin >> id;
-            if(user_Trie.search(id)==1){
+            if(user_id_Trie.search(id)==1){
                 cout<<"This id is already in used please use a separate one...\n";
                 cin.get();
                 cin.get();            
@@ -120,24 +120,29 @@ void removeUser(){
      vector<User> users= readUsersFromFile();
      vector<User> us;
      cout<<"\n\t\t\tDelete User Record";
-     cout<<"\n\nEnter the name of the user: ";
-     cin>>temp;
      cout<<"\n\nEnter the ID of the user: ";
      cin>>id;
      cout<<"\nEnter the name of the user: ";
      cin>>temp;
-     if(user_Trie.search(id)==true){
+     if(user_id_Trie.search(id)==true){
+        int k=0;
      ifstream fin("user.dat",ios::binary);
      for (const auto& user : users) {
+        if(k==0){
         if (user.getName() == temp && user.getID()==id) {
             i++;
 		  cout<<"\n\t\tUser Record deleted\n";
           cout<<"User name: "<<user.getName()<<"\nUser ID: "<<user.getID();
-          user_Trie.remove(temp+id);
+          user_id_Trie.remove(temp+id);
+          k=1;
           cin.get();
 	    }
 	    else{
           us.push_back(user);
+        }
+        }
+        else{
+            us.push_back(user);
         }
     }
     fin.close();
@@ -153,6 +158,7 @@ void removeUser(){
      }
       else{
     cout << "Account with this ID not found. Please sign up." << endl;
+    cin.get();
     cin.get();
     }
      
@@ -187,7 +193,7 @@ void detailsOfAllUsers(){
      cout<<"So here is the deatils all users...\n";
      int i=1;
        for (const auto& user : users) {
-        cout<<i<<". ID: "<<user.getID()<<", Name: "<<user.getName()<<", Password: "<<user.getPassword()<<", Point: "<<user.getPoints()<<", Total Purchases: "<<user.getTotalPurchases()<<"\n";
+        cout<<i<<". ID: "<<user.getID()<<", Name: "<<user.getName()<<", Password: "<<user.getPassword()<<", Balance: "<<user.getBalance()<<", Total Purchases: "<<user.getTotalPurchases()<<"\n";
         i++;
         }
     cin.get();
@@ -205,7 +211,7 @@ void deleteAccount(){
      cout<<"\n\t\t\tDelete Account";
      cout<<"\n\nEnter your ID: ";
      cin>>id;
-     if(user_Trie.search(id)==true){
+     if(user_id_Trie.search(id)==true){
          cout<<"\nEnter your name: ";
         cin>>temp;
      cout<<"\nEnter your Password: ";
@@ -216,7 +222,7 @@ void deleteAccount(){
             i++;
 		  cout<<"\n\t\tAccount deleted\n";
           cout<<"Account ID: "<<user.getID()<<"\nAccount Name: "<<user.getName()<<"\nAccount Password: "<<user.getPassword();
-          user_Trie.remove(id);
+          user_id_Trie.remove(id);
           cin.get();
 	    }
 	    else{
@@ -250,7 +256,7 @@ void changeAccountName(){
 
      cout<<"\n\nEnter your ID: ";
      cin>>id;
-     if(user_Trie.search(id)==true){
+     if(user_id_Trie.search(id)==true){
      cout<<"\nEnter your name: ";
      cin>>temp;
      cout<<"\nEnter your Password: ";
@@ -302,7 +308,7 @@ void changeAccountPassword(){
 
      cout<<"\n\nEnter your ID: ";
      cin>>id;
-     if(user_Trie.search(id)==true){
+     if(user_id_Trie.search(id)==true){
     cout<<"\nEnter your name: ";
      cin>>temp;
      cout<<"\nEnter your Password: ";
@@ -349,7 +355,7 @@ void populate_User_Trie_With_UserData() {
     string code;
     for (const auto& user : users) {
         code=user.getID();
-        user_Trie.insert(code);
+        user_id_Trie.insert(code);
     }
 }
 
@@ -380,4 +386,56 @@ void printUsersByTotalPurchases() {
 
     cout << "=============================================\n";
     cin.get();
+}
+
+void depositMoney() {
+    string id;
+    string name;
+    string password;
+
+    cout << "Enter your ID: ";
+    cin >> id;
+    cout << "Enter your name: ";
+    cin >> name;
+    cout << "Enter your Password: ";
+    cin >> password;
+    if(user_id_Trie.search(id)){
+    vector<User> users = readUsersFromFile();
+    User currentUser;
+
+    for (auto& user : users) {
+        if (user.getName() == name && user.getID() == id && user.getPassword() == password) {
+            currentUser = user;
+            break;
+        }
+    }
+
+    if (currentUser.getName().empty()) {
+        cout << "Account not found. Please sign up.\n";
+        cin.get();
+        return;
+    }
+
+    double depositAmount;
+    cout << "Enter the amount you want to deposit: $";
+   depositAmount=getPositiveNumericInput();
+
+    currentUser.depositsMoney(depositAmount);
+
+    for (auto& u : users) {
+        if (u.getID() == currentUser.getID()) {
+            u = currentUser; 
+            break;
+        }
+    }
+
+    writeAllUsersToFile(users);
+
+    cout << "Deposit successful! Your new balance is: $" << currentUser.getBalance() << endl;
+    cin.get(); 
+    }
+    else{
+        cout<<"Account with this id is not found...\n";
+        cin.get();
+    }
 }

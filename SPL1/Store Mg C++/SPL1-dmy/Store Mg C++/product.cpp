@@ -61,7 +61,7 @@ public:
 };
 
 void Product::withdraw(int qty) {
-    if((quantity-qty)>0){
+    if((quantity-qty)>=0){
         quantity -= qty;
         sold += qty;
         cin.get();
@@ -73,7 +73,7 @@ void Product::withdraw(int qty) {
         }
 }
 int Product::reduce(int qty) {
-        if((quantity-qty)>=0 && (qty<1)){
+        if((quantity-qty)>=0 && (qty>=1)){
         quantity -= qty;
          cout << "\n\nStock updated.\n";
           cin.get();
@@ -86,14 +86,14 @@ int Product::reduce(int qty) {
         }
 }
 int Product::refill(int qty) {
-    if(qty>0){
+    if(qty>=1){
     quantity += qty;
     cout << "\n\nStock updated.\n";
     cin.ignore();
     return 1;
     }
     else{
-        cout<<"Quantity has to be greater than 0 ";
+        cout<<"Quantity has to be greater than or equal to 1\n ";
         cin.get();
         return 0;
     }

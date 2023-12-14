@@ -67,4 +67,4 @@ public:
         }
         removeRecursive(root, str, 0);
     }
-}product_Trie,user_Trie;
+}product_id_Trie,product_name_trie,user_id_Trie,user_name_trie;

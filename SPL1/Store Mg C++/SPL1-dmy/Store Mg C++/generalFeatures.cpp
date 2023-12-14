@@ -23,6 +23,46 @@ int getNumericInput() {
     return numericInput;
 }
 
+double getPositiveNumericInput() {
+    double numericInput;
+    while (true) {
+        if (cin >> numericInput && numericInput > 0) {
+            break;
+        } else {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Invalid input. Please enter a positive number greater than 0: ";
+        }
+    }
+    return numericInput;
+}
+
+int getNumericInput(int lowerLimit, int upperLimit) {
+    int numericInput;
+    while (true) {
+        if (cin >> numericInput) {
+            if (numericInput >= lowerLimit && numericInput <= upperLimit) {
+                if (cin.peek() == '\n') {
+                    break;  // Valid input within the specified range
+                } else {
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    cout << "Invalid input. Please enter only numeric values within the specified range.\n";
+                }
+            } else {
+                cout << "Input out of range. Please enter a value between " << lowerLimit << " and " << upperLimit << ".\n";
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            }
+        } else {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Invalid input. Please enter only numeric values within the specified range.\n";
+        }
+    }
+    return numericInput;
+}
+
 string getGenre(string file_name) {
     if (file_name == "grocery.dat") {
         return "grc";

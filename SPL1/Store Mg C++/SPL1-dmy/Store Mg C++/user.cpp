@@ -5,7 +5,7 @@ class User {
     string id;
     string name;
     string password;
-    double points;
+    double balance;
     double totalPurchases;
     public:
     User(){}
@@ -13,15 +13,15 @@ class User {
         id=b;
         name=n;
         password=p;
-        points=0.0;
+        balance=0.0;
         totalPurchases=0.0;
     }
 
-    User(string b,string n, string p,double po,double t){
+    User(string b,string n, string p,double bal,double t){
         id=b;
         name=n;
         password=p;
-        points=po;
+        balance=bal;
         totalPurchases=t;
     }
 
@@ -34,11 +34,14 @@ class User {
     string getPassword() const {
         return password;
     }
-    double getPoints() const {
-        return points;
+    double getBalance() const {
+        return balance;
     }
-    void depositPoints(double b){
-        points=points+b;
+    void depositsMoney(double b){
+        balance=balance+b;
+    }
+    void withDrawMoney(double b){
+        balance=balance-b;
     }
     double getTotalPurchases() const {
         return totalPurchases;

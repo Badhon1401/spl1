@@ -27,10 +27,10 @@ int main()
 	dealermenu:
 	system("cls");
 	cout<<"=================================================================";
-	cout<<"\n\n\t\t\t    DEALER MENU\n1. Add new product\n2. Display stock\n3. Refill\n4. Remove an item\n5. Sales Report\n6. Apply discount\n7. Remove User\n8. List of Users\n9. Reduce\n10. User Performance\n11. Exit:";
+	cout<<"\n\n\t\t\t    DEALER MENU\n1. Add new product\n2. Display stock\n3. Refill\n4. Remove an item\n5. Sales Report\n6. Apply discount\n7. Remove User\n8. List of Users\n9. Reduce\n10. User Performance\n11. Giveaway\n12. Reset User Performance\n13. Exit:";
 	cout<<"\n\n\n==========================END OF MENU=============================";
 	cout<<"\n\n Enter your Choice :\t";
-	i=getNumericInput();
+	i=getNumericInput(1,13);
 	if(i==1)
 	{
 	system("cls");
@@ -44,7 +44,7 @@ int main()
 	}
 	else if(i==3)
 	{   system("cls");
-		refillProduct();cin.get();goto dealermenu;
+		refillProduct();goto dealermenu;
 	}
 	else if(i==4)
 	{	
@@ -77,6 +77,14 @@ int main()
 	{	
 		system("cls");
 		printUsersByTotalPurchases();cin.get();goto dealermenu;
+	}
+	if(i==11){
+		system("cls");
+		doGiveaway();cin.get();goto dealermenu;
+	}
+	if(i==11){
+		system("cls");
+		resetUserPerformance();cin.get();goto dealermenu;
 	}
 	else 
 	{
@@ -114,7 +122,7 @@ int main()
 		custmenu:
 	system("cls");
 	cout<<"=================================================================";
-	cout<<"\n\n1. Purchase\n2. Display stock\n3. Delete Account\n4. Change Account Name\n5. Change Account Password\n6. Recommendation\n7. Do rating\n8. Exit:";
+	cout<<"\n\n1. Purchase\n2. Display stock\n3. Delete Account\n4. Change Account Name\n5. Change Account Password\n6. Recommendation\n7. Do rating\n8. Deposit Money\n9. Exit:";
 	cout<<"\n\n\n==========================END OF MENU=============================";
 		cout<<"\n\n Enter your Choice :\t";
 		h=getNumericInput();
@@ -147,7 +155,7 @@ int main()
 	{	
 		system("cls");
 		int n;
-		cout<<"Choose one of the option...\n1. Recommendation Based On Rating\n2. Recommendation Based On No of Buyers\n3. Recommendation Based On No of Copies Sold..\n";
+		cout<<"Choose one of the option...\n1. Recommendation Based On Rating\n2. Recommendation Based On No of Buyers\n3. Recommendation Based On No of Copies Sold\n4. Overall Rating\n";
 		n=getNumericInput();
 		system("cls");
 		if(n==1){
@@ -165,12 +173,21 @@ int main()
 			vector<Product> products=readProductsFromFile(file_name);
 			productsBySoldCopies(products);	
 		}
+		if(n==4){
+			string file_name=getFileName();
+			vector<Product> products=readProductsFromFile(file_name);
+			productsByOverallPerformance(products);	
+		}
 		cin.get();goto custmenu;
 	}
 	else if(h==7)
 	{
 	system("cls");
 	doRating();cin.get();goto custmenu;
+	}
+	if(h==8){
+	system("cls");
+	depositMoney();cin.get();goto custmenu;
 	}
     else 
 	{
