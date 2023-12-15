@@ -1,31 +1,40 @@
 #include<bits/stdc++.h>
 #include "user.cpp"
+#include "generalFeatures.cpp"
 using namespace std;
 
-void writeUserToFile(const User& user) {
+void writeNewUserToFile(const User& user) {
     ofstream outFile("user.dat", ios::app);
     if (outFile.is_open()) {
-        outFile << user.name << " " << user.id << endl;
+        outFile << user.getID() << " " << user.getName() << " " << user.getPassword() <<" " << user.getBalance() <<" " << user.getTotalPurchases() << endl;
         outFile.close();
         cout << "User data written to file successfully." << endl;
+        user_id_Trie.insert(user.getID());
         cin.get();
-    } else {
+    } 
+    else {
         cout << "Unable to open file." << endl;
         cin.get();
     }
     outFile.close();
 }
-void writeAllUsersToFile(const User& user) {
-    ofstream outFile("user.dat", ios::app);
-    if (outFile.is_open()) {
-        outFile << user.name << " " << user.id << endl;
-        outFile.close();
-    } else {
+
+void writeAllUsersToFile(const vector<User>& users) {
+    ofstream outFile("user.dat");
+    
+    if (!outFile.is_open()) {
         cout << "Unable to open file." << endl;
         cin.get();
+        return;
     }
+
+    for (const User& user : users) {
+        outFile << user.getID() << " " << user.getName() << " " << user.getPassword() <<" " << user.getBalance() <<" " << user.getTotalPurchases() << endl;
+    }
+
     outFile.close();
 }
+
 
 vector<User> readUsersFromFile() {
     vector<User> users;
@@ -33,147 +42,194 @@ vector<User> readUsersFromFile() {
     if (inFile.is_open()) {
         string name;
         string id;
-        while (inFile >> name >> id) {
-            User user(name, id);
+        string pass;
+        double points;
+        double totalPurchases;
+        while (inFile >> id >> name >> pass >> points >> totalPurchases) {
+            User user(id,name,pass,points,totalPurchases);
             users.push_back(user);
         }
         inFile.close();
     }
     return users;
 }
-int searchUser(string nam,string idd){
-    ifstream inFile("user.dat");
-    if (inFile.is_open()) {
-        string name;
-        string id;
-        while (inFile >> name >> id) {
-            if(nam==name && idd==id){
-                 inFile.close();
-                 return 1;
-            }
-        }
 
+
+void displayUsers() {
+    vector<User> users = readUsersFromFile();
+
+    if (users.empty()) {
+        cout << "No users found.\n";
+        cin.get();
+        cin.get();
+        return;
     }
-    inFile.close();
-    return 0;
 
+    cout << "=====================================\n";
+    cout << setw(4) << "No." << setw(10) << "ID" << setw(10) << "NAME" << "\n";
+    cout << "=====================================\n";
+
+    int i = 1;
+    for (const auto& user : users) {
+        cout << setw(4) << i << setw(10) << user.getID() << setw(10) << user.getName() << "\n";
+        i++;
+    }
+
+    cout << "=====================================\n";
+    cin.get();
 }
 
-bool signIn() {
-    string name;
-    string id;
-    cout << "Enter your name: ";
-    cin >> name;
-    cout << "\nEnter your ID: ";
-    cin >> id;
+void detailsOfAllUsers(){
+     vector<User> users= readUsersFromFile();
+     const int columnCount = 5;  
+    int columnWidths[columnCount] = {4, 15, 15, 10, 18};
+
+    cout << "====================================================================\n";
+    cout << setw(columnWidths[0]) << "No" << setw(columnWidths[1]) << "ID"
+         << setw(columnWidths[2]) << "Name" << setw(columnWidths[3]) << "Balance"
+         << setw(columnWidths[4]) << "Total Purchases" << "\n";
+    cout << "====================================================================\n";
+
+    int i = 1;
+
+    for (int col = 0; col < columnCount; ++col) {
+        cout << string(columnWidths[col], '=') << " ";
+    }
+    cout << "\n";
+
+    for (const auto& user : users) {
+        cout << setw(columnWidths[0]) << i << setw(columnWidths[1]) << user.getID()
+             << setw(columnWidths[2]) << user.getName() << setw(columnWidths[3])
+             << fixed << setprecision(2) << user.getBalance() << setw(columnWidths[4])
+             << fixed << setprecision(2) << user.getTotalPurchases() << "\n";
+        i++;
+    }
+
+    for (int col = 0; col < columnCount; ++col) {
+        cout << string(columnWidths[col], '=') << " ";
+    }
+    cout << "\n";
+    cin.get();
+    cin.get();
+}
+
+void populate_User_Trie_With_UserData() {
     vector<User> users = readUsersFromFile();
     for (const auto& user : users) {
-        if (user.getName() == name && user.getID()==id) {
-            cout << "Welcome, " << user.getName() << "!" << endl;
-            cin.get();
-            return true;
-        }
+        user_id_Trie.insert(user.getID());
+        user_data_Trie.insert(user.getID()+user.getName());
     }
-
-    cout << "Account not found. Please sign up." << endl;
-    cin.get();
-    return false;
 }
 
-void signUp() {
-    string name;
-    string id;
-    cout << "Enter your name: ";
-    cin >> name;
-    cout << "Enter your ID: ";
-    cin >> id;
-     if(searchUser(name,id)==1){
-        cout<<"Already user exist...\n";
+bool compareUsersByTotalPurchases(const User& user1, const User& user2) {
+    return user1.getTotalPurchases() > user2.getTotalPurchases();
+}
+
+void printUsersByTotalPurchases() {
+    vector<User> users = readUsersFromFile();
+
+    if (users.empty()) {
+        cout << "No users found.\n";
         cin.get();
+        return;
     }
-    else{
-    User newUser(name, id);
-    writeUserToFile(newUser);
-    }
-}
 
-void removeUser(){
-   system("cls");	
-    int i=0;
-     string temp;
-     string id;
-     vector<User> users= readUsersFromFile();
-     vector<User> us;
-     cout<<"\n\t\t\tDelete User Record";
-     cout<<"\n\nEnter the name of the user: ";
-     cin>>temp;
-     cout<<"\nEnter the ID of the user: ";
-     cin>>id;
-     ifstream fin("user.dat",ios::binary);
-     for (const auto& user : users) {
-        if (user.getName() == temp && user.getID()==id) {
-            i++;
-		  cout<<"\n\t\tUser Record deleted\n";
-          cout<<"User name: "<<user.getName()<<"\nUser ID: "<<user.getID();
-          cin.get();
-	    }
-	    else{
-          us.push_back(user);
-        }
+    sort(users.begin(), users.end(), compareUsersByTotalPurchases);
+    const int columnCount = 4; 
+    int columnWidths[columnCount] = {4, 10, 10, 15};
+
+    cout << "=============================================\n";
+    cout << setw(columnWidths[0]) << "No." << setw(columnWidths[1]) << "ID"
+         << setw(columnWidths[2]) << "NAME" << setw(columnWidths[3]) << "Total Purchases" << "\n";
+    cout << "=============================================\n";
+
+    int i = 1;
+
+    for (int col = 0; col < columnCount; ++col) {
+        cout << string(columnWidths[col], '=') << " ";
     }
-    fin.close();
-    remove("user.dat");
-    if(i==0){
-        cout<<"Users not found...\n";
-        cin.get();
-    }
-     for (const auto& user : us) {
-        writeAllUsersToFile(user);
-     }
-	 cin.get();
-}
-void listOfUsers(){
-     vector<User> users= readUsersFromFile();
-     cout<<"So here is the list of all users...\n";
-     int i=1;
-       for (const auto& user : users) {
-        cout<<i<<". Name: "<<user.getName()<<" ID: "<<user.getID()<<"\n";
+    cout << "\n";
+
+    for (const auto& user : users) {
+        cout << setw(columnWidths[0]) << i << setw(columnWidths[1]) << user.getID()
+             << setw(columnWidths[2]) << user.getName() << setw(columnWidths[3])
+             << fixed << setprecision(2) << user.getTotalPurchases() << "\n";
         i++;
-        }
-    cin.get();
+    }
+
+    for (int col = 0; col < columnCount; ++col) {
+        cout << string(columnWidths[col], '=') << " ";
+    }
+    cout << "\n";
     cin.get();
 }
-void deleteAccount(){
-   system("cls");	
-    int i=0;
-     string temp;
-     string id;
-     vector<User> users= readUsersFromFile();
-     vector<User> us;
-     cout<<"\n\t\t\tDelete Account";
-     cout<<"\n\nEnter your name: ";
-     cin>>temp;
-     cout<<"\nEnter your ID: ";
-     cin>>id;
-     ifstream fin("user.dat",ios::binary);
-     for (const auto& user : users) {
-        if (user.getName() == temp && user.getID()==id) {
-            i++;
-		  cout<<"\n\t\tAccount deleted\n";
-          cout<<"Account name: "<<user.getName()<<"\nAccount ID: "<<user.getID();
-          cin.get();
-	    }
-	    else{
-          us.push_back(user);
-        }
+
+void searchUser() {
+    string userId, name;
+
+    cout << "Enter User ID: ";
+    cin >> userId;
+    cout << "Enter User Name: ";
+    cin >> name;
+
+    if (user_id_Trie.search(userId) == true) {
+        if (user_data_Trie.search(userId + name) == true) { 
+                cout << "User Found!\n";
+                cout << "ID: " << userId << "\n";
+                cout << "Name: " << name << "\n";
+        
+            }
+        else {
+        cout << "User with this ID and Name combination does not exist.\n";
+        cin.get();
+        cin.get();
     }
-    fin.close();
-    remove("user.dat");
-    if(i==0){
-        cout<<"Account not found...\n";
+
+    } else {
+        cout << "User with this ID does not exist.\n";
+        cin.get();
+        cin.get();
     }
-     for (const auto& user : us) {
-        writeAllUsersToFile(user);
-     }
-	 cin.get();
+}
+
+
+void findUserWithMaxTotalPurchases() {
+    vector<User> users=readUsersFromFile();
+    if (users.empty()) {
+        cout << "No users found.\n";
+        cin.get();
+        return;
+    }
+
+    auto maxUser = max_element(users.begin(), users.end(),
+        [](const User& user1, const User& user2) {
+            return user1.getTotalPurchases() < user2.getTotalPurchases();
+        });
+
+    cout << "User with Maximum Total Purchases:\n";
+    cout << "ID: " << maxUser->getID() << "\n";
+    cout << "Name: " << maxUser->getName() << "\n";
+    cout << "Total Purchases: " << maxUser->getTotalPurchases() << "\n";
+
+    cin.get();
+}
+
+void calculateAverageTotalPurchases() {
+    vector<User> users=readUsersFromFile();
+    if (users.empty()) {
+        cout << "No users found.\n";
+        cin.get();
+        return;
+    }
+
+    double totalPurchasesSum = accumulate(users.begin(), users.end(), 0.0,
+        [](double sum, const User& user) {
+            return sum + user.getTotalPurchases();
+        });
+
+
+    double averageTotalPurchases = totalPurchasesSum / users.size();
+
+    cout << "Average Total Purchases: " << averageTotalPurchases << "\n";
+    cin.get();
 }

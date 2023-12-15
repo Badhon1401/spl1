@@ -1,74 +1,70 @@
 #include<bits/stdc++.h>
 using namespace std;
-struct Node {
-    Node* links[26];
-    bool flag = false;
 
-    bool containKey(char ch) {
-        return (links[ch - 'a'] != NULL);
-    }
+class TrieNode {
+public:
+    unordered_map<char, TrieNode*> children;
+    bool isEndOfWord;
 
-    void put(char ch, Node* node) {
-        links[ch - 'a'] = node;
-    }
-
-    Node* get(char ch) {
-        return links[ch - 'a'];
-    }
-
-    void setEnd() {
-        flag = true;
-    }
-
-    bool isEnd() {
-        return flag;
-    }
+    TrieNode() : isEndOfWord(false) {}
 };
 
 class Trie {
-public:
-    Node* root;
+private:
+    TrieNode* root;
 
-    Trie() {
-        root = new Node();
-    }
-    void insert(string word) {
-        Node* node = root;
-        for (int i = 0; i < static_cast<int>(word.size()); i++) {
-            if (!node->containKey(word[i])) {
-                node->put(word[i], new Node());
-            }
-            node = node->get(word[i]);
+    bool removeRecursive(TrieNode* current, const string& str, size_t depth) {
+    if (depth == str.length()) {
+        if (current->isEndOfWord) {
+            current->isEndOfWord = false;
+            return current->children.empty();  
         }
-        node->setEnd();
+        return false;
     }
 
-    bool search(string word) {
-        Node* node = root;
-        for (int i = 0; i < static_cast<int>(word.size()); i++) {
-            if (!node->containKey(word[i])) {
+    char ch = str[depth];
+    if (current->children.find(ch) != current->children.end()) {
+        bool shouldRemoveChild = removeRecursive(current->children[ch], str, depth + 1);
+        if (shouldRemoveChild) {
+            delete current->children[ch];
+            current->children.erase(ch);
+            return current->children.empty() && !current->isEndOfWord;
+        }
+    }
+
+    return false;
+}
+
+
+public:
+    Trie() : root(new TrieNode()) {}
+
+    void insert(const string& str) {
+        TrieNode* current = root;
+        for (char ch : str) {
+            if (current->children.find(ch) == current->children.end()) {
+                current->children[ch] = new TrieNode();
+            }
+            current = current->children[ch];
+        }
+        current->isEndOfWord = true;
+    }
+
+    bool search(const string& str) {
+        TrieNode* current = root;
+        for (char ch : str) {
+            if (current->children.find(ch) == current->children.end()) {
                 return false;
             }
-            node = node->get(word[i]);
+            current = current->children[ch];
         }
-        return node->isEnd();
+        return current->isEndOfWord;
     }
 
-     void remove(string word) {
-        Node* node = root;
-        for (int i = 0; i < static_cast<int>(word.size()); i++) {
-            if (!node->containKey(word[i])) {
-                cout << "Word not found in the Trie." << endl;
-                return;
-            }
-            node = node->get(word[i]);
+    void remove(const string& str) {
+        if (str.empty()) {
+            return;
         }
-        if (node->isEnd()) {
-            node->setEnd();  // Mark the end of word as false (deleted)
-            cout << "Word \"" << word << "\" deleted from the Trie." << endl;
-        } else {
-            cout << "Word not found in the Trie." << endl;
-        }
+        removeRecursive(root, str, 0);
     }
-
-}tr;
+}product_id_Trie,product_data_Trie,user_id_Trie,user_data_Trie;
