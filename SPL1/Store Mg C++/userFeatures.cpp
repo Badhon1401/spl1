@@ -65,17 +65,13 @@ void displayUsers() {
         return;
     }
 
-    cout << "=====================================\n";
-    cout << setw(4) << "No." << setw(10) << "ID" << setw(10) << "NAME" << "\n";
-    cout << "=====================================\n";
-
     int i = 1;
-    for (const auto& user : users) {
-        cout << setw(4) << i << setw(10) << user.getID() << setw(10) << user.getName() << "\n";
-        i++;
-    }
 
-    cout << "=====================================\n";
+for (const auto& user : users) {
+    cout <<i<< ". ID : "<< user.getID()<<" ,  Name : "<< user.getName()<< "\n";
+    i++;
+}
+ cout << "\n";
     cin.get();
 }
 
@@ -110,7 +106,7 @@ void detailsOfAllUsers(){
     }
     cout << "\n";
     cin.get();
-    cin.get();
+   
 }
 
 void populate_User_Trie_With_UserData() {
@@ -135,31 +131,13 @@ void printUsersByTotalPurchases() {
     }
 
     sort(users.begin(), users.end(), compareUsersByTotalPurchases);
-    const int columnCount = 4; 
-    int columnWidths[columnCount] = {4, 10, 10, 15};
+    
+   int i = 1;
 
-    cout << "=============================================\n";
-    cout << setw(columnWidths[0]) << "No." << setw(columnWidths[1]) << "ID"
-         << setw(columnWidths[2]) << "NAME" << setw(columnWidths[3]) << "Total Purchases" << "\n";
-    cout << "=============================================\n";
-
-    int i = 1;
-
-    for (int col = 0; col < columnCount; ++col) {
-        cout << string(columnWidths[col], '=') << " ";
-    }
-    cout << "\n";
-
-    for (const auto& user : users) {
-        cout << setw(columnWidths[0]) << i << setw(columnWidths[1]) << user.getID()
-             << setw(columnWidths[2]) << user.getName() << setw(columnWidths[3])
-             << fixed << setprecision(2) << user.getTotalPurchases() << "\n";
-        i++;
-    }
-
-    for (int col = 0; col < columnCount; ++col) {
-        cout << string(columnWidths[col], '=') << " ";
-    }
+for (const auto& user : users) {
+    cout <<i<< ". ID : "<< user.getID()<<" ,  Name : "<< user.getName()<< " , Total Purchases : "<< user.getTotalPurchases()<<"\n";
+    i++;
+}
     cout << "\n";
     cin.get();
 }
@@ -169,10 +147,11 @@ void searchUser() {
 
     cout << "Enter User ID: ";
     cin >> userId;
-    cout << "Enter User Name: ";
-    cin >> name;
 
     if (user_id_Trie.search(userId) == true) {
+         cout << "Enter User Name: ";
+    cin >> name;
+
         if (user_data_Trie.search(userId + name) == true) { 
                 cout << "User Found!\n";
                 cout << "ID: " << userId << "\n";
@@ -182,14 +161,15 @@ void searchUser() {
         else {
         cout << "User with this ID and Name combination does not exist.\n";
         cin.get();
-        cin.get();
+        return;
     }
 
     } else {
         cout << "User with this ID does not exist.\n";
         cin.get();
-        cin.get();
+        return;
     }
+    cin.get();
 }
 
 
@@ -206,7 +186,7 @@ void findUserWithMaxTotalPurchases() {
             return user1.getTotalPurchases() < user2.getTotalPurchases();
         });
 
-    cout << "User with Maximum Total Purchases:\n";
+    cout << "User with Maximum Total Purchases:\n\n";
     cout << "ID: " << maxUser->getID() << "\n";
     cout << "Name: " << maxUser->getName() << "\n";
     cout << "Total Purchases: " << maxUser->getTotalPurchases() << "\n";

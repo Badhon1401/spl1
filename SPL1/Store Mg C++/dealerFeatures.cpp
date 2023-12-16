@@ -73,13 +73,15 @@ void removeProduct() {
             }
 
             writeAllProductsToFile(products, file_name);
-            cin.get();
+            
         } else {
             cout << "Product with this Name and ID combination not found." << endl;
+            cin.get();
             cin.get();
         }
     } else {
         cout << "Product with this ID not found." << endl;
+        cin.get();
         cin.get();
     }
 }
@@ -121,13 +123,16 @@ void refillProduct() {
         } else {
             cout << "Product with this ID and Name combination not found...\n";
             cin.get();
+            cin.get();
+            return;
         }
     } else {
         cout << "Product with this ID is not found...\n";
         cin.get();
+        cin.get();
+        return ;
     }
-
-    cin.get();
+   cin.get();
 }
 
 
@@ -162,10 +167,14 @@ void reduceProduct() {
         } else {
             cout << "Product with this Name and ID combination not found." << endl;
             cin.get();
+              cin.get();
+            return;
         }
     } else {
         cout << "Product with this ID not found." << endl;
         cin.get();
+          cin.get();
+        return;
     }
     cin.get();
 }
@@ -362,7 +371,6 @@ void changerProductName() {
                     cout << "ID: " << product.getID() << " , New Name: " << product.getName() << "\n";
                     product_data_Trie.remove(productId+productName);
                     product_data_Trie.insert(productId+newProductName);
-                    cin.get();
                     break;
                 }
             }

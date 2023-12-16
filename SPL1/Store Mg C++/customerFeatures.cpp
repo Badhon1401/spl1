@@ -179,12 +179,12 @@ void deleteAccount(User& currentUser) {
             else{
                  cout << "Your entered Password is wrong. You have to enter correct user information to delete the account...\n";
                 cin.get();
-                cin.get();
+                
             }
         } else {
             cout << "Your entered User Name is wrong. You have to enter correct user information to delete the account...\n";
             cin.get();
-            cin.get();
+            
         }
     } else {
         cout << "Your entered ID is wrong. You have to enter correct user information to delete the account.....\n";
@@ -228,17 +228,21 @@ void changeAccountPassword(User& currentUser){
        else{
                  cout << "Your entered Password is wrong. You have to enter correct user information to delete the account...\n";
                 cin.get();
-                cin.get();
+                return;
+               
             }
         } else {
             cout << "Your entered User Name is wrong. You have to enter correct user information to delete the account...\n";
             cin.get();
-            cin.get();
+            return;
+            
         }
     } else {
         cout << "Your entered ID is wrong. You have to enter correct user information to delete the account.....\n";
         cin.get();
+        return ;
     }
+    cin.get();
 }
 
 void doRating() {
@@ -266,7 +270,7 @@ void doRating() {
                  cin.get();
                  float rate;
                 cout << "Enter Rating: ";
-                rate=getNumericInput(0,10);
+                rate=getDoubleNumericInput(0,10);
                 product.setRating(rate); 
                 cout << "\nUpdated Details:\n";
                 cout << "ID: " << product.getID() << "\nName: " << product.getName()
@@ -280,16 +284,17 @@ void doRating() {
           else{
         cout<<"Product with this ID and Name not found...\n";
         cin.get();
-        cin.get();
+        return;
     }
     }
     
     else{
         cout<<"Product with this ID not found...\n";
         cin.get();
-        cin.get();
+        return ;
+        
     }
-
+    
 }
 
 
@@ -431,27 +436,28 @@ void customerShopping(User& currentUser) {
  void searchProduct() {
     string productId, name;
 
-    cout << "Enter product ID: ";
+    cout << "Enter Product ID: ";
     cin >> productId;
-    cout << "Enter product Name: ";
-    cin >> name;
 
     if (product_id_Trie.search(productId) == true) {
+        cout << "Enter Product Name: ";
+        cin >> name;
         if (product_data_Trie.search(productId + name) == true) { 
                 cout << "Product Found!\n";
                 cout << "ID: " << productId<< "\n";
                 cout << "Name: " << name << "\n";
+                cin.get();
         
             }
         else {
-        cout << "User with this ID and Name combination does not exist.\n";
+        cout << "Product with this ID and Name combination does not exist.\n";
         cin.get();
-        cin.get();
+       
     }
 
     } else {
-        cout << "User with this ID does not exist.\n";
-        cin.get();
+        cout << "Product with this ID does not exist.\n";
         cin.get();
     }
+    cin.get();
 }

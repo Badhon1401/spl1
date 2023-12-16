@@ -77,24 +77,14 @@ void displayProducts(string file_name) {
     }
 
 
-   cout << "=======================================================================================\n";
-cout <<"  Serial No   " <<"    ID      "
-     << "     Name     " << "    Price      "
-     << "     Quantity" << "\n";
-cout << "=======================================================================================\n\n";
-
-int i = 1;
+   int i = 1;
 
 for (const auto& product : products) {
-    cout << "     "<<i << "           "<< product.getID()<<"                "<< product.getName() << "                  " << product.getPrice() <<"            "<< product.getQuantity() << "\n";
+    cout <<i<< ". ID : "<< product.getID()<<" ,  Name : "<< product.getName() << " , Price : " << product.getPrice() <<" , Quantity : "<< product.getQuantity() << "\n";
     i++;
 }
 
-cout << "=======================================================================================\n\n";
 
-
-
-    cin.get();
 }
 
 void displayProducts() {
@@ -107,22 +97,14 @@ void displayProducts() {
         return;
     }
 
-   cout << "=======================================================================================\n";
-cout <<"  Serial No   " <<"    ID      "
-     << "     Name     " << "    Price      "
-     << "     Quantity" << "\n";
-cout << "=======================================================================================\n\n";
-
 int i = 1;
 
 for (const auto& product : products) {
-    cout << "     "<<i << "           "<< product.getID()<<"                "<< product.getName() << "                  " << product.getPrice() <<"            "<< product.getQuantity() << "\n";
+    cout <<i<< ". ID : "<< product.getID()<<" ,  Name : "<< product.getName() << " , Price : " << product.getPrice() <<" , Quantity : "<< product.getQuantity() << "\n";
     i++;
 }
 
-cout << "=======================================================================================\n\n";
-
-
+    cin.get();
     cin.get();
 }
 
@@ -157,7 +139,7 @@ void detailsOfAllProducts(){
 
         i++;
     }
-    cin.get();
+      cout << "============================================================================================================================\n";
     cin.get();
 }
 
@@ -165,9 +147,6 @@ void salesReport() {
     string file_name = getFileName();
     system("cls");
     vector<Product> products = readProductsFromFile(file_name);
-
-    cout << "Sales Report:\n";
-
     vector<Product> soldProducts;
     for (const auto& product : products) {
         if (product.getNoOfSells() > 0) {
@@ -181,27 +160,14 @@ void salesReport() {
         return;
     }
 
-    const int columnCount = 4;  // Assuming 4 columns in total
-    int columnWidths[columnCount] = {20, 20, 20, 20};
-
-    cout << "====================================================================\n";
-    cout << "                       Sales report                                 \n";
-    cout << "====================================================================\n";
-    
     int i = 1;
 
-    for (int col = 0; col < columnCount; ++col) {
-        cout << string(columnWidths[col], '=') << " ";
-    }
-    cout << "\n";
-
     for (const auto& product : products) {
-        cout << "   " << i << setw(columnWidths[1]) << product.getID()
-             << setw(columnWidths[2]) << product.getName()
-             << setw(columnWidths[3]) << fixed << setprecision(2) << product.getNoOfSells() << "\n";
+        cout<< i <<". ID : " << product.getID()
+             << " , Name : " << product.getName()
+             << " , No of Sells : " << product.getNoOfSells() << "\n";
         i++;
     }
- cout << "====================================================================\n";
     
    cin.get();
 
@@ -232,7 +198,7 @@ void populate_Product_Trie_With_ProductData() {
                 fileName = "healthcare.dat";
                 break;
             case 7:
-                fileName = "homeappliance.dat";
+                fileName = "homeapplaince.dat";
                 break;
         }
     
@@ -248,69 +214,41 @@ void populate_Product_Trie_With_ProductData() {
 }
 
 void printProductsBasedOnRating(const vector<Product>& products) {
-    const int columnCount = 4;  
-    int columnWidths[columnCount] = {4, 12, 16, 25};
 
-    cout << "Products with details (Serial No, ID, Name, Rating):\n\n";
-    cout << "====================================================================\n";
-    cout << setw(columnWidths[0]) << "Serial No" << setw(columnWidths[1]) << "ID"
-         << setw(columnWidths[2]) << "Name" << setw(columnWidths[3]) << "Rating" << "\n";
-    cout << "====================================================================\n";
-
-    int i = 1;
+    int i=1;
 
     for (const auto& product : products) {
-        cout << setw(columnWidths[0]) << i << setw(columnWidths[1]) <<"    "<< product.getID()
-             << setw(columnWidths[2]) <<"  " << product.getName()
-             << setw(columnWidths[3]) << fixed << setprecision(2) << product.getRating() << "\n";
+        cout <<i<<". ID : "<< product.getID()
+             << " , Name : " << product.getName()
+             << " , Rating : " << product.getRating() << "\n";
         i++;
     }
-cout << "====================================================================\n";
 
 }
 
 void printProductsBasedOnBuyers(const vector<Product>& products) {
-    const int columnCount = 4;  
-    int columnWidths[columnCount] = {4, 12, 16, 25};
-
-    cout << "Products with details (Serial No, ID, Name, Rating):\n\n";
-    cout << "====================================================================\n";
-    cout << setw(columnWidths[0]) << "Serial No" << setw(columnWidths[1]) << "ID"
-         << setw(columnWidths[2]) << "Name" << setw(columnWidths[3]) << "No of Buyers" << "\n";
-    cout << "====================================================================\n";
-
-    int i = 1;
+    
+    int i=1;
 
     for (const auto& product : products) {
-        cout << setw(columnWidths[0]) << i << setw(columnWidths[1]) <<"    "<< product.getID()
-             << setw(columnWidths[2]) <<"  "<< product.getName()
-             << setw(columnWidths[3]) << fixed << setprecision(2) << product.getNoOfBuyers() << "\n";
+        cout <<i<<". ID : "<< product.getID()
+             << " , Name : " << product.getName()
+             << " , No of Buyers : " << product.getNoOfBuyers() << "\n";
         i++;
     }
-
-    cout << "====================================================================\n\n";
 
 }
 
 void printProductsBasedOnSoldCopies(const vector<Product>& products) {
-    const int columnCount = 4;  
-    int columnWidths[columnCount] = {4, 12, 16, 25};
 
-    cout << "Products with details (Serial No, ID, Name, Rating):\n\n";
-    cout << "====================================================================\n";
-    cout << setw(columnWidths[0]) << "Serial No" << setw(columnWidths[1]) << "ID"
-         << setw(columnWidths[2]) << "Name" << setw(columnWidths[3]) << "No of Sells" << "\n";
-    cout << "====================================================================\n";
-
-    int i = 1;
+  int i=1;
 
     for (const auto& product : products) {
-        cout << setw(columnWidths[0]) << i << setw(columnWidths[1]) <<"    "<< product.getID()
-             << setw(columnWidths[2]) <<"  "<< product.getName()
-             << setw(columnWidths[3]) << fixed << setprecision(2) << product.getNoOfSells() << "\n";
+        cout <<i<<". ID : "<< product.getID()
+             << " , Name : " << product.getName()
+             << " , No of Sells : " << product.getNoOfSells() << "\n";
         i++;
     }
-cout << "====================================================================\n\n";
    
 }
 
@@ -371,23 +309,17 @@ void productsByOverallPerformance(const vector<Product>& products) {
     sort(sortedProducts.begin(), sortedProducts.end(), compareByOverallPerformance);
     cin.get();
 
-    cout << "Products with details (Serial No, ID, Name, Overall Performance):\n\n";
-cout << "====================================================================\n";
-cout << " Serial No      ID               Name             Overall Performance \n";
-cout << "====================================================================\n";
+int i=1;
 
-int i = 1;
-for (const auto& product : sortedProducts) {
-    double overallPerformance = ratingWeight * product.getRating()
+    for (const auto& product : products) {
+        double overallPerformance = ratingWeight * product.getRating()
                              + buyersWeight * product.getNoOfBuyers()
                              + soldCopiesWeight * product.getNoOfSells();
-
-    cout << setw(4) << i << setw(12) << product.getID() << setw(16) << product.getName()
-         << setw(25) << fixed << setprecision(2) << overallPerformance << "\n";
-    i++;
-}
-
-cout << "====================================================================\n";
+        cout <<i<<". ID : "<< product.getID()
+             << " , Name : " << product.getName()
+             << " , Average Performance : " << overallPerformance << "\n";
+        i++;
+    }
 
 }
 
@@ -395,25 +327,20 @@ void revenueReport() {
     string file_name=getFileName();
     vector<Product> products=readProductsFromFile(file_name);
     double totalRevenue = 0.0;
-
-    cout << "Revenue Report:\n";
-    cout << "====================================================================\n";
-    cout << " Serial No      ID               Name             Revenue \n";
-    cout << "====================================================================\n";
-
-    int i = 1;
+      int i=1;
+cout << "Products with corresponding revinew:\n\n";
     for (const auto& product : products) {
         double productRevenue = product.getPrice() * product.getNoOfSells();
         totalRevenue += productRevenue;
-
-        cout << setw(4) << i << setw(12) << product.getID() << setw(16) << product.getName()
-             << setw(25) << fixed << setprecision(2) << productRevenue << "\n";
+        cout <<i<<". ID : "<< product.getID()
+             << " , Name : " << product.getName()
+             << " , Revenue : " << productRevenue << "\n";
         i++;
     }
-
-    cout << "====================================================================\n";
-    cout << "Total Revenue: " << fixed << setprecision(2) << totalRevenue << "\n";
-    cout << "====================================================================\n";
+  
+   
+    cout << "\n\n\t\tTotal Revenue: "<< totalRevenue << "\n";
+    
     cin.get();
 }
 
@@ -421,17 +348,16 @@ void lowStockProducts() {
     string file_name=getFileName();
     vector<Product> products=readProductsFromFile(file_name);
     int threshold = 10;
-    cout << "Products with Low Stock:\n";
-    cout << "====================================================================\n";
-    cout << " Serial No      ID               Name             Quantity \n";
-    cout << "====================================================================\n";
-
+    cout << "Products with Low Stock:\n\n";
+    
     int i = 1;
     for (const auto& product : products) {
         if (product.getQuantity() < threshold) {
-            cout << setw(4) << i << setw(12) << product.getID() << setw(16) << product.getName()
-                 << setw(25) << product.getQuantity() << "\n";
-            i++;
+             cout <<i<<". ID : "<< product.getID()
+             << " , Name : " << product.getName()
+             << " , Remaining Stocks : " << product.getQuantity() << "\n";
+        i++;
+           
         }
     }
 
@@ -439,7 +365,6 @@ void lowStockProducts() {
         cout << "No products with low stock.\n";
     }
 
-    cout << "====================================================================\n";
     cin.get();
 }
 
@@ -447,17 +372,15 @@ void highRatedProducts() {
     string file_name=getFileName();
     vector<Product> products=readProductsFromFile(file_name);
      double ratingThreshold = 6.0;
-    cout << "Highly Rated Products:\n";
-    cout << "====================================================================\n";
-    cout << " Serial No      ID               Name             Rating \n";
-    cout << "====================================================================\n";
+    cout << "Highly Rated Products:\n\n";
 
     int i = 1;
     for (const auto& product : products) {
         if (product.getRating() >= ratingThreshold) {
-            cout << setw(4) << i << setw(12) << product.getID() << setw(16) << product.getName()
-                 << setw(25) << fixed << setprecision(2) << product.getRating() << "\n";
-            i++;
+            cout <<i<<". ID : "<< product.getID()
+             << " , Name : " << product.getName()
+             << " , Rating : " << product.getRating() << "\n";
+        i++;
         }
     }
 
@@ -465,7 +388,6 @@ void highRatedProducts() {
         cout << "No highly rated products.\n";
     }
 
-    cout << "====================================================================\n";
     cin.get();
 }
 
@@ -473,17 +395,15 @@ void productsWithDiscounts() {
     string file_name=getFileName();
     vector<Product> products=readProductsFromFile(file_name);
     double discountThreshold = 1.5;
-    cout << "Products with Discounts:\n";
-    cout << "====================================================================\n";
-    cout << " Serial No      ID               Name             Discount (%) \n";
-    cout << "====================================================================\n";
+    cout << "Products with Discounts:\n\n";
 
     int i = 1;
     for (const auto& product : products) {
         if (product.getDiscount() > discountThreshold) {
-            cout << setw(4) << i << setw(12) << product.getID() << setw(16) << product.getName()
-                 << setw(25) << fixed << setprecision(2) << (product.getDiscount()) << "\n";
-            i++;
+             cout <<i<<". ID : "<< product.getID()
+             << " , Name : " << product.getName()
+             << " , Discount : " << product.getDiscount() << "\n";
+        i++;
         }
     }
 
@@ -491,7 +411,6 @@ void productsWithDiscounts() {
         cout << "No products with discounts.\n";
     }
 
-    cout << "====================================================================\n";
     cin.get();
 }
 
@@ -501,16 +420,15 @@ void topDiscountedProducts(const vector<Product>& products, int numTopProducts =
         return a.getDiscount() > b.getDiscount();
     });
 
-    cout << "Top Discounted Products:\n";
-    cout << "====================================================================\n";
-    cout << " Serial No      ID               Name             Discount \n";
-    cout << "====================================================================\n";
+    cout << "Top Discounted Products:\n\n";
+   
 
-    size_t i = 1; // Change int to size_t (unsigned type)
+    size_t i = 1;
 
-    for (size_t j = 0; j < numTopProducts && j < sortedProducts.size(); ++j) {
-        cout << setw(4) << i << setw(12) << sortedProducts[j].getID() << setw(16) << sortedProducts[j].getName()
-             << setw(25) << fixed << setprecision(2) << sortedProducts[j].getDiscount() << "\n";
+    for (int  j = 0; j < numTopProducts && j < int(sortedProducts.size()); ++j) {
+        cout <<i<<". ID : "<< sortedProducts[j].getID()
+             << " , Name : " << sortedProducts[j].getName()
+             << " , Discount : " << sortedProducts[j].getDiscount() << "\n";
         i++;
     }
 
@@ -518,7 +436,6 @@ void topDiscountedProducts(const vector<Product>& products, int numTopProducts =
         cout << "No discount data available.\n";
     }
 
-    cout << "====================================================================\n";
     cin.get();
 }
 
@@ -532,6 +449,6 @@ void totalRevenue() {
         totalRev += (product.getPrice() * product.getNoOfSells());
     }
 
-    cout << "Total Revenue: " << fixed << setprecision(2) << totalRev << "\n";
+    cout << "Total Revenue: " << totalRev << "\n";
     cin.get();
 }
